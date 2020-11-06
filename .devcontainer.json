@@ -1,0 +1,13 @@
+{
+    "extensions": [
+        "esbenp.prettier-vscode"
+    ],
+    "dockerComposeFile": [
+        "docker-compose.yml",
+    ],
+    "service": "container",
+    "workspaceFolder": "/workspace/coms4156",
+    "settings": {
+        "terminal.integrated.shell.linux": null
+    }
+}
