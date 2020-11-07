@@ -1,11 +1,11 @@
-version: "3.8"
+version: '3.8'
 services:
-  container:
-    build:
-      context: "."
-      dockerfile: Dockerfile
-    volumes:
-      - ".:/workspace/coms4156"
-    ports:
-      - "8080:80"
-    command: "tail -f /dev/null"
+    container:
+        build:
+            context: '.'
+            dockerfile: Dockerfile
+        volumes:
+            - '.:/workspace/coms4156'
+        ports:
+            - '3000:3000'
+        command: 'tail -f /dev/null'
