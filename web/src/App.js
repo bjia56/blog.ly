@@ -5,7 +5,7 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <Alert>This is a test.</Alert>
+                <Alert variant="primary">This is a test.</Alert>
             </div>
         )
     }
