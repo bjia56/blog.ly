@@ -5,7 +5,7 @@ module.exports = {
     // set the default mode to be development.
     // we should adjust it once the skeleton of the project is complete.
     mode: 'development',
-    entry: './web/src/App.js',
+    entry: './web/src/index.js',
     // for debugging
     devtool: 'inline-source-map',
     output: {
@@ -20,6 +20,10 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                 },
+            },
+            {
+                test: /\.css$/i,
+                use: ['style-loader', 'css-loader'],
             },
             {
                 test: /\.html$/,
