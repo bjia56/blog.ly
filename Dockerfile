@@ -11,7 +11,9 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt install -y nodejs
 
 # Install tools
+RUN apt install -y openjdk-11-jre
 RUN npm install -g prettier && \
     npm install -g redoc-cli && \
     npm install -g @redocly/openapi-cli && \
+    npm install -g @openapitools/openapi-generator-cli -g && \
     npm install -g depcheck
