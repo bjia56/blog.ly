@@ -2,7 +2,7 @@ name: Run prettier to check style on pull requests
 
 on:
   pull_request:
-    branches: [master]
+    branches: [main]
 
 jobs:
   prettier:
