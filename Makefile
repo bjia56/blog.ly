@@ -2,6 +2,9 @@
 default:
 	echo "Build not implemented yet"
 
+pretty:
+	prettier -w .
+
 gen-api:
 	openapi-generator-cli generate -i api/openapi.yaml -g nodejs-express-server -o .
 
@@ -14,4 +17,4 @@ render-docs:
 lint-docs:
 	openapi lint api/openapi.yaml
 
-.PHONY: gen-api serve-docs render-docs lint-docs
+.PHONY: pretty gen-api serve-docs render-docs lint-docs

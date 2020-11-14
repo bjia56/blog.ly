@@ -58,6 +58,8 @@ paths:
             tags:
                 - blog
             summary: Get a list of blogs
+            x-eov-operation-id: apiBlogsGET
+            x-eov-operation-handler: controllers/BlogController
             parameters:
                 - name: author
                   in: query
@@ -94,6 +96,8 @@ paths:
                 - blog
             summary: Create a new blog
             description: This can only be done by users who have logged in.
+            x-eov-operation-id: apiBlogsPOST
+            x-eov-operation-handler: controllers/BlogController
             responses:
                 '201':
                     description:
@@ -110,6 +114,8 @@ paths:
             tags:
                 - blog
             summary: Get blog details
+            x-eov-operation-id: apiBlogsUuidGET
+            x-eov-operation-handler: controllers/BlogController
             parameters:
                 - name: uuid
                   in: path
@@ -131,6 +137,8 @@ paths:
             description:
                 This can only be done by users who have logged in and on blogs
                 that the user has authored.
+            x-eov-operation-id: apiBlogsUuidPUT
+            x-eov-operation-handler: controllers/BlogController
             parameters:
                 - name: uuid
                   in: path
@@ -158,6 +166,8 @@ paths:
             description:
                 This can only be done by users who have logged in and on blogs
                 that the user has authored.
+            x-eov-operation-id: apiBlogsUuidDELETE
+            x-eov-operation-handler: controllers/BlogController
             parameters:
                 - name: uuid
                   in: path
@@ -181,6 +191,8 @@ paths:
             tags:
                 - user
             summary: Get user information
+            x-eov-operation-id: apiUserGET
+            x-eov-operation-handler: controllers/UserController
             parameters:
                 - name: user
                   in: query
@@ -200,6 +212,8 @@ paths:
                 - user
             summary: Update user information
             description: This can only be done by users who have logged in.
+            x-eov-operation-id: apiUserPUT
+            x-eov-operation-handler: controllers/UserController
             responses:
                 '200':
                     description: Success.
@@ -213,6 +227,8 @@ paths:
                 - follow
             summary: Add a follow entry
             description: This can only be done by users who have logged in.
+            x-eov-operation-id: apiFollowPOST
+            x-eov-operation-handler: controllers/FollowController
             parameters:
                 - name: user
                   in: query
@@ -230,6 +246,8 @@ paths:
                 - follow
             summary: Delete a follow entry
             description: This can only be done by users who have logged in.
+            x-eov-operation-id: apiFollowDELETE
+            x-eov-operation-handler: controllers/FollowController
             parameters:
                 - name: user
                   in: query
@@ -251,6 +269,8 @@ paths:
             tags:
                 - search
             summary: Search for blogs
+            x-eov-operation-id: apiSearchGET
+            x-eov-operation-handler: controllers/SearchController
             parameters:
                 - name: keyword
                   in: query
