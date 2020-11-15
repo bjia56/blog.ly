@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 const Service = require('./Service')
 
-var blogIds = [];
+var blogIds = []
 
 /**
  * Get a list of blogs
@@ -33,17 +33,16 @@ const apiBlogsGET = ({ author, cursor, limit }) =>
 const apiBlogsPOST = () =>
     new Promise(async (resolve, reject) => {
         try {
-            var blogID;
+            var blogID
             if (blogIds.length > 0) {
-                var lastBlogID = blogIds[blogIds.length - 1];
-                blogID = lastBlogID + 1;
-                blogIds.push(blogID);
+                var lastBlogID = blogIds[blogIds.length - 1]
+                blogID = lastBlogID + 1
+                blogIds.push(blogID)
+            } else {
+                blogID = 1
+                blogIds.push(blogID)
             }
-            else{
-                blogID = 1;
-                blogIds.push(blogID);
-            }
-            resolve(Service.successResponse({blogId: blogID}))
+            resolve(Service.successResponse(blogID))
         } catch (e) {
             reject(
                 Service.rejectResponse(
