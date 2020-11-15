@@ -58,7 +58,7 @@ class ExpressServer {
                 apiSpec: this.openApiPath,
                 operationHandlers: path.join(__dirname),
                 fileUploader: { dest: config.FILE_UPLOAD_PATH },
-                validateResponse: true,
+                validateResponses: true,
             })
         )
 

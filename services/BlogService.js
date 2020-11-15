@@ -12,13 +12,7 @@ const Service = require('./Service')
 const apiBlogsGET = ({ author, cursor, limit }) =>
     new Promise(async (resolve, reject) => {
         try {
-            resolve(
-                Service.successResponse({
-                    author,
-                    cursor,
-                    limit,
-                })
-            )
+            resolve(Service.successResponse([1, 10, 100]))
         } catch (e) {
             reject(
                 Service.rejectResponse(

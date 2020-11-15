@@ -1,26 +1,26 @@
 name: Run prettier to check style on pull requests
 
 on:
-  pull_request:
-    branches: [main]
+    pull_request:
+        branches: [main]
 
 jobs:
-  prettier:
-    runs-on: ubuntu-latest
+    prettier:
+        runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        # Make sure the actual branch is checked out when running on pull requests
-        ref: ${{ github.head_ref }}
-        # This is important to fetch the changes to the previous commit
-        fetch-depth: 0
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+              with:
+                  # Make sure the actual branch is checked out when running on pull requests
+                  ref: ${{ github.head_ref }}
+                  # This is important to fetch the changes to the previous commit
+                  fetch-depth: 0
 
-    - name: Check code style
-      uses: creyD/prettier_action@v3.1
-      with:
-        dry: true
-        prettier_options: --write *
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Check code style
+              uses: creyD/prettier_action@v3.1
+              with:
+                  dry: true
+                  prettier_options: --write *
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
