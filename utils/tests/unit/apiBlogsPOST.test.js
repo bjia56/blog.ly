@@ -1,21 +1,27 @@
 import { apiBlogsPOST } from '../../../services/BlogService.js'
 import 'regenerator-runtime/runtime'
 
-// test('test for test', () => {
-//     expect(1 + 1).toBe(2)
-// })
+const db = require('../../../sql')
 
 describe('create Blog POST handler tests', () => {
-    test('create blog returns an integer id', () => {
+    test('create blog returns JSON with an integer uuid', () => {
         return apiBlogsPOST().then((data) => {
-            expect(typeof data.payload).toBe('number')
-            expect(data.code).toBe(200)
+            expect(typeof data.payload).toBe('object')
+            expect('uuid' in data.payload)
+            expect(typeof data.payload.uuid).toBe('number')
+            expect(data.code).toBe(201)
         })
     })
 
     test('blogIDs increment by 1', async () => {
-        let blogID1 = await apiBlogsPOST()
-        let blogID2 = await apiBlogsPOST()
-        expect(blogID2.payload).toBe(blogID1.payload + 1)
+        var blogID1 = await apiBlogsPOST()
+        var blogID2 = await apiBlogsPOST()
+        expect(blogID2.payload.uuid).toBe(blogID1.payload.uuid + 1)
     })
+})
+
+afterAll(async (done) => {
+    // close db after completion
+    db.close()
+    done()
 })

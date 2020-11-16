@@ -13,6 +13,9 @@ function initializeModels() {
 
     var modelsList = []
     models = {
+        close: () => {
+            sequelize.close()
+        },
         syncAll: () => {
             // This block of code does some async juggling to
             // first drop all tables in reverse order, then
