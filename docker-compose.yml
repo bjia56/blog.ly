@@ -10,3 +10,25 @@ services:
             - '3000:3000'
             - '8001:8001' # redoc
         command: 'tail -f /dev/null'
+        depends_on:
+            - database
+        links:
+            - database
+        environment:
+            DB_HOST: database
+            DB_PORT: 3306
+            DB_USER: blogly
+            DB_PASSWORD: blogly
+            DB_NAME: blogly
+    database:
+        image: mysql:5.7
+        volumes:
+            - db_data:/var/lib/mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: rootpassword
+            MYSQL_DATABASE: blogly
+            MYSQL_USER: blogly
+            MYSQL_PASSWORD: blogly
+volumes:
+    db_data: {}

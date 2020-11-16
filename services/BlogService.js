@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 const Service = require('./Service')
+const Database = require('../sql')
 
 var blogIds = []
 
@@ -14,7 +15,11 @@ var blogIds = []
 const apiBlogsGET = ({ author, cursor, limit }) =>
     new Promise(async (resolve, reject) => {
         try {
-            resolve(Service.successResponse([1, 10, 100]))
+            resolve(
+                Service.successResponse({
+                    uuids: [1, 10, 100],
+                })
+            )
         } catch (e) {
             reject(
                 Service.rejectResponse(
@@ -33,16 +38,21 @@ const apiBlogsGET = ({ author, cursor, limit }) =>
 const apiBlogsPOST = () =>
     new Promise(async (resolve, reject) => {
         try {
-            var blogID
-            if (blogIds.length > 0) {
-                var lastBlogID = blogIds[blogIds.length - 1]
-                blogID = lastBlogID + 1
-                blogIds.push(blogID)
-            } else {
-                blogID = 1
-                blogIds.push(blogID)
-            }
-            resolve(Service.successResponse(blogID))
+            Database.User.create({}).then((user) => {
+                Database.Blog.create({
+                    author: user.uuid,
+                    title: '',
+                }).then((blog) => {
+                    resolve(
+                        Service.successResponse(
+                            {
+                                uuid: blog.uuid,
+                            },
+                            201
+                        )
+                    )
+                })
+            })
         } catch (e) {
             reject(
                 Service.rejectResponse(
