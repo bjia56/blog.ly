@@ -9,7 +9,6 @@ const bodyParser = require('body-parser')
 const OpenApiValidator = require('express-openapi-validator')
 const logger = require('./logger')
 const config = require('./config')
-const { ExceptionHandler } = require('winston')
 
 class ExpressServer {
     constructor(port, openApiYaml) {
