@@ -1,19 +1,30 @@
 import { apiBlogsPOST } from '../../../services/BlogService.js'
 import 'regenerator-runtime/runtime'
 
+const dbHelper = require('./dbHelper')
 const db = require('../../../sql')
 
 describe('create Blog POST handler tests', () => {
-    test('create blog returns JSON with an integer uuid', () => {
-        return apiBlogsPOST().then((data) => {
-            expect(typeof data.payload).toBe('object')
-            expect('uuid' in data.payload)
-            expect(typeof data.payload.uuid).toBe('number')
-            expect(data.code).toBe(201)
-        })
+    test('create blog returns JSON with an integer uuid', async () => {
+        await dbHelper.populateDatabase([
+            db.User.build({ uuid: 1 }),
+            db.Blog.build({ title: '', author: 1, uuid: 100 }),
+        ])
+
+        var data = await apiBlogsPOST()
+        expect(typeof data.payload).toBe('object')
+        expect('uuid' in data.payload)
+        expect(typeof data.payload.uuid).toBe('number')
+        expect(data.payload.uuid).toBe(101)
+        expect(data.code).toBe(201)
     })
 
     test('blogIDs increment by 1', async () => {
+        await dbHelper.populateDatabase([
+            db.User.build({ uuid: 1 }),
+            db.Blog.build({ title: '', author: 1, uuid: 100 }),
+        ])
+
         var blogID1 = await apiBlogsPOST()
         var blogID2 = await apiBlogsPOST()
         expect(blogID2.payload.uuid).toBe(blogID1.payload.uuid + 1)

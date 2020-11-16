@@ -1,8 +1,7 @@
-/* eslint-disable no-unused-vars */
+import 'regenerator-runtime/runtime'
+
 const Service = require('./Service')
 const Database = require('../sql')
-
-var blogIds = []
 
 /**
  * Get a list of blogs

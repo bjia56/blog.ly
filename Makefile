@@ -18,6 +18,6 @@ lint-docs:
 	openapi lint api/openapi.yaml
 
 create-db:
-	npm run create-db
+	npm run createDB
 
 .PHONY: pretty gen-api serve-docs render-docs lint-docs create-db

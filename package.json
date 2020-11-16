@@ -7,7 +7,7 @@
         "server": "node index.js",
         "build": "webpack --mode production",
         "test": "jest",
-        "create-db": "node scripts/create_db.js"
+        "createDB": "node scripts/createDB.js"
     },
     "repository": {
         "type": "git",

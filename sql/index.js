@@ -16,42 +16,14 @@ function initializeModels() {
         close: () => {
             sequelize.close()
         },
-        syncAll: () => {
-            // This block of code does some async juggling to
-            // first drop all tables in reverse order, then
-            // create tables in forward order.
-
-            var dropIdx = modelsList.length - 1
-            var dropNext = (callback) => {
-                var curr = dropIdx
-                dropIdx--
-
-                modelsList[curr].drop().then(() => {
-                    if (curr == 0) {
-                        callback()
-                    } else {
-                        dropNext(callback)
-                    }
-                })
+        syncAll: async () => {
+            for (var i = 1; i <= modelsList.length; i++) {
+                await modelsList[modelsList.length - i].drop()
             }
 
-            var syncIdx = 0
-            var syncNext = (callback) => {
-                var curr = syncIdx
-                syncIdx++
-
-                modelsList[curr].sync().then(() => {
-                    if (curr == modelsList.length - 1) {
-                        callback()
-                    } else {
-                        syncNext(callback)
-                    }
-                })
+            for (var i = 0; i < modelsList.length; i++) {
+                await modelsList[i].sync()
             }
-
-            dropNext(() => {
-                syncNext(() => {})
-            })
         },
     }
 
