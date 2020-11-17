@@ -4,7 +4,7 @@ FROM ubuntu:bionic-20200921
 RUN apt update && apt upgrade -y
 
 # Install core necessities
-RUN apt install -y git curl make
+RUN apt install -y git curl make mysql-client
 
 # Install Nodejs runtime
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -

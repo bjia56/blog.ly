@@ -88,9 +88,12 @@ paths:
                     content:
                         application/json:
                             schema:
-                                type: array
-                                items:
-                                    type: integer
+                                type: object
+                                properties:
+                                    uuids:
+                                        type: array
+                                        items:
+                                            type: integer
         post:
             tags:
                 - blog
@@ -106,7 +109,10 @@ paths:
                     content:
                         application/json:
                             schema:
-                                type: integer
+                                type: object
+                                properties:
+                                    uuid:
+                                        type: integer
                 '401':
                     description: Unauthenticated. The user is not logged in.
     '/api/blogs/{uuid}':
