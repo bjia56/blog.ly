@@ -16,14 +16,16 @@ function initializeModels() {
         close: () => {
             sequelize.close()
         },
-        syncAll: async () => {
-            for (var i = 1; i <= modelsList.length; i++) {
-                await modelsList[modelsList.length - i].drop()
-            }
+        syncAll: () => {
+            return (async () => {
+                for (var i = 1; i <= modelsList.length; i++) {
+                    await modelsList[modelsList.length - i].drop()
+                }
 
-            for (var i = 0; i < modelsList.length; i++) {
-                await modelsList[i].sync()
-            }
+                for (var i = 0; i < modelsList.length; i++) {
+                    await modelsList[i].sync()
+                }
+            })()
         },
     }
 

@@ -7,7 +7,13 @@ const db = require('../../../sql')
 describe('create Blog POST handler tests', () => {
     test('create blog returns JSON with an integer uuid', async () => {
         await dbHelper.populateDatabase([
-            db.User.build({ uuid: 1 }),
+            db.User.build({
+                uuid: 1,
+                username: 'jdoe',
+                passwordHash: '',
+                name: 'John Doe',
+                notificationPreference: '',
+            }),
             db.Blog.build({ title: '', author: 1, uuid: 100 }),
         ])
 
@@ -21,7 +27,13 @@ describe('create Blog POST handler tests', () => {
 
     test('blogIDs increment by 1', async () => {
         await dbHelper.populateDatabase([
-            db.User.build({ uuid: 1 }),
+            db.User.build({
+                uuid: 1,
+                username: 'jdoe',
+                passwordHash: '',
+                name: 'John Doe',
+                notificationPreference: '',
+            }),
             db.Blog.build({ title: '', author: 1, uuid: 100 }),
         ])
 

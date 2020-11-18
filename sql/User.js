@@ -13,14 +13,17 @@ function constructModel(sequelize, models) {
             username: {
                 type: Sequelize.STRING,
                 field: 'username',
+                allowNull: false,
             },
             passwordHash: {
                 type: Sequelize.STRING,
                 field: 'passwordHash',
+                allowNull: false,
             },
             name: {
                 type: Sequelize.STRING,
                 field: 'name',
+                allowNull: false,
             },
             description: {
                 type: Sequelize.TEXT,
@@ -29,6 +32,7 @@ function constructModel(sequelize, models) {
             notificationPreference: {
                 type: Sequelize.STRING,
                 field: 'notificationPreference',
+                allowNull: false,
             },
         },
         { freezeTableName: true, timestamps: false }
