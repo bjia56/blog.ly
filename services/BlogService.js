@@ -1,6 +1,5 @@
 var MarkdownIt = require('markdown-it')()
 
-const Cursor = require('./cursor')
 const Service = require('./Service')
 const Database = require('../sql')
 
