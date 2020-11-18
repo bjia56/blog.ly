@@ -58,6 +58,7 @@ paths:
             tags:
                 - blog
             summary: Get a list of blogs
+            operationId: apiBlogsGET
             x-eov-operation-id: apiBlogsGET
             x-eov-operation-handler: controllers/BlogController
             parameters:
@@ -99,6 +100,7 @@ paths:
                 - blog
             summary: Create a new blog
             description: This can only be done by users who have logged in.
+            operationId: apiBlogsPOST
             x-eov-operation-id: apiBlogsPOST
             x-eov-operation-handler: controllers/BlogController
             responses:
@@ -120,6 +122,7 @@ paths:
             tags:
                 - blog
             summary: Get blog details
+            operationId: apiBlogsUuidGET
             x-eov-operation-id: apiBlogsUuidGET
             x-eov-operation-handler: controllers/BlogController
             parameters:
@@ -143,6 +146,7 @@ paths:
             description:
                 This can only be done by users who have logged in and on blogs
                 that the user has authored.
+            operationId: apiBlogsUuidPUT
             x-eov-operation-id: apiBlogsUuidPUT
             x-eov-operation-handler: controllers/BlogController
             parameters:
@@ -164,7 +168,10 @@ paths:
                 '404':
                     description: Blog not found.
             requestBody:
-                $ref: '#/components/requestBodies/UpdateBlog'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateBlog'
         delete:
             tags:
                 - blog
@@ -172,6 +179,7 @@ paths:
             description:
                 This can only be done by users who have logged in and on blogs
                 that the user has authored.
+            operationId: apiBlogsUuidDELETE
             x-eov-operation-id: apiBlogsUuidDELETE
             x-eov-operation-handler: controllers/BlogController
             parameters:
@@ -197,6 +205,7 @@ paths:
             tags:
                 - user
             summary: Get user information
+            operationId: apiUserGET
             x-eov-operation-id: apiUserGET
             x-eov-operation-handler: controllers/UserController
             parameters:
@@ -218,6 +227,7 @@ paths:
                 - user
             summary: Update user information
             description: This can only be done by users who have logged in.
+            operationId: apiUserPUT
             x-eov-operation-id: apiUserPUT
             x-eov-operation-handler: controllers/UserController
             responses:
@@ -226,13 +236,17 @@ paths:
                 '401':
                     description: Unauthenticated. The user is not logged in.
             requestBody:
-                $ref: '#/components/requestBodies/UpdateUser'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateUser'
     /api/follow:
         post:
             tags:
                 - follow
             summary: Add a follow entry
             description: This can only be done by users who have logged in.
+            operationId: apiFollowPOST
             x-eov-operation-id: apiFollowPOST
             x-eov-operation-handler: controllers/FollowController
             parameters:
@@ -252,6 +266,7 @@ paths:
                 - follow
             summary: Delete a follow entry
             description: This can only be done by users who have logged in.
+            operationId: apiFollowDELETE
             x-eov-operation-id: apiFollowDELETE
             x-eov-operation-handler: controllers/FollowController
             parameters:
@@ -275,6 +290,7 @@ paths:
             tags:
                 - search
             summary: Search for blogs
+            operationId: apiSearchGET
             x-eov-operation-id: apiSearchGET
             x-eov-operation-handler: controllers/SearchController
             parameters:
@@ -327,12 +343,10 @@ components:
                     type: string
                 created:
                     description: Blog creation datetime
-                    type: string
-                    format: date-time
+                    type: integer
                 updated:
                     description: Blog last updated datetime
-                    type: string
-                    format: date-time
+                    type: integer
                 author:
                     description: Blog author uuid
                     type: integer
@@ -370,35 +384,24 @@ components:
                 hits:
                     description: Total hits
                     type: integer
-    requestBodies:
         UpdateBlog:
-            content:
-                application/json:
-                    schema:
-                        type: object
-                        properties:
-                            title:
-                                description: Blog title
-                                type: string
-                            contents:
-                                description: Blog contents in raw Markdown
-                                type: string
-            description: New blog contents
-            required: true
+            type: object
+            properties:
+                title:
+                    description: Blog title
+                    type: string
+                contents:
+                    description: Blog contents in raw Markdown
+                    type: string
         UpdateUser:
-            content:
-                application/json:
-                    schema:
-                        type: object
-                        properties:
-                            name:
-                                description: User name
-                                type: string
-                            description:
-                                description: User description ("About Me")
-                                type: string
-                            notificationPreference:
-                                description: Notification preference (TBD)
-                                type: string
-            description: New user information
-            required: true
+            type: object
+            properties:
+                name:
+                    description: User name
+                    type: string
+                description:
+                    description: User description ("About Me")
+                    type: string
+                notificationPreference:
+                    description: Notification preference (TBD)
+                    type: string
