@@ -1,6 +1,6 @@
 name: NPM Test
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
     build:
@@ -41,4 +41,4 @@ jobs:
 
             - name: Test
               run: |
-                  npm run tests
+                  npm run test
