@@ -1,5 +1,7 @@
-/* eslint-disable no-unused-vars */
 const Service = require('./Service')
+const Database = require('../sql')
+
+const User = Database.User
 
 /**
  * Get user information
@@ -10,9 +12,25 @@ const Service = require('./Service')
 const apiUserGET = ({ user }) =>
     new Promise(async (resolve, reject) => {
         try {
+            var users = await User.findAll({ where: { uuid: user } })
+            if (users.length == 0) {
+                throw {
+                    message: 'User not found',
+                }
+            }
+
+            user = users[0]
+            if (user.description === null) {
+                user.description = ''
+            }
+
             resolve(
                 Service.successResponse({
-                    user,
+                    uuid: user.uuid,
+                    username: user.username,
+                    name: user.name,
+                    description: user.description,
+                    notificationPreference: user.notificationPreference,
                 })
             )
         } catch (e) {

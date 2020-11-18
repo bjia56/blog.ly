@@ -1,7 +1,14 @@
-/* eslint-disable no-unused-vars */
-const Service = require('./Service')
+var MarkdownIt = require('markdown-it')()
 
-var blogIds = []
+const Service = require('./Service')
+const Database = require('../sql')
+
+const Blog = Database.Blog
+const User = Database.User
+
+function toUnixTime(datetime) {
+    return Math.floor(datetime.getTime() / 1000)
+}
 
 /**
  * Get a list of blogs
@@ -14,7 +21,21 @@ var blogIds = []
 const apiBlogsGET = ({ author, cursor, limit }) =>
     new Promise(async (resolve, reject) => {
         try {
-            resolve(Service.successResponse([1, 10, 100]))
+            var query = {
+                limit: limit,
+                order: [['updated', 'DESC']],
+                where: {},
+            }
+            if (author !== undefined) {
+                query.where.author = author
+            }
+            var results = await Blog.findAll(query)
+
+            resolve(
+                Service.successResponse({
+                    uuids: results.map((r) => r.uuid),
+                })
+            )
         } catch (e) {
             reject(
                 Service.rejectResponse(
@@ -33,16 +54,26 @@ const apiBlogsGET = ({ author, cursor, limit }) =>
 const apiBlogsPOST = () =>
     new Promise(async (resolve, reject) => {
         try {
-            var blogID
-            if (blogIds.length > 0) {
-                var lastBlogID = blogIds[blogIds.length - 1]
-                blogID = lastBlogID + 1
-                blogIds.push(blogID)
-            } else {
-                blogID = 1
-                blogIds.push(blogID)
-            }
-            resolve(Service.successResponse(blogID))
+            User.create({
+                username: '',
+                passwordHash: '',
+                name: '',
+                notificationPreference: '',
+            }).then((user) => {
+                Blog.create({
+                    author: user.uuid,
+                    title: '',
+                }).then((blog) => {
+                    resolve(
+                        Service.successResponse(
+                            {
+                                uuid: blog.uuid,
+                            },
+                            201
+                        )
+                    )
+                })
+            })
         } catch (e) {
             reject(
                 Service.rejectResponse(
@@ -62,11 +93,17 @@ const apiBlogsPOST = () =>
 const apiBlogsUuidDELETE = ({ uuid }) =>
     new Promise(async (resolve, reject) => {
         try {
-            resolve(
-                Service.successResponse({
-                    uuid,
-                })
-            )
+            var blogs = await Blog.findAll({ where: { uuid: uuid } })
+            if (blogs.length == 0) {
+                throw {
+                    message: 'Blog not found',
+                    status: 404,
+                }
+            }
+            var blog = blogs[0]
+            await blog[0].destroy()
+
+            resolve(Service.successResponse(null))
         } catch (e) {
             reject(
                 Service.rejectResponse(
@@ -85,9 +122,35 @@ const apiBlogsUuidDELETE = ({ uuid }) =>
 const apiBlogsUuidGET = ({ uuid }) =>
     new Promise(async (resolve, reject) => {
         try {
+            var blogs = await Blog.findAll({ where: { uuid: uuid } })
+            if (blogs.length == 0) {
+                throw {
+                    message: 'Blog not found',
+                    status: 404,
+                }
+            }
+            var blog = blogs[0]
+
+            var author = await User.findAll({
+                where: { uuid: blog.author },
+                limit: 1,
+            })
+            author = author[0]
+
+            if (blog.content === null) {
+                blog.content = ''
+            }
+
             resolve(
                 Service.successResponse({
-                    uuid,
+                    uuid: blog.uuid,
+                    title: blog.title,
+                    contents: blog.content,
+                    rendered: MarkdownIt.render(blog.content),
+                    created: toUnixTime(blog.created),
+                    updated: toUnixTime(blog.updated),
+                    author: blog.author,
+                    authorName: author.name,
                 })
             )
         } catch (e) {
@@ -104,18 +167,31 @@ const apiBlogsUuidGET = ({ uuid }) =>
  * This can only be done by users who have logged in and on blogs that the user has authored.
  *
  * uuid Integer Blog uuid.
- * uNKNOWNUnderscoreBASEUnderscoreTYPE UNKNOWN_BASE_TYPE New blog contents
+ * blogContents New blog contents
  * no response value expected for this operation
  * */
-const apiBlogsUuidPUT = ({ uuid, uNKNOWNUnderscoreBASEUnderscoreTYPE }) =>
+const apiBlogsUuidPUT = ({ uuid, body }) =>
     new Promise(async (resolve, reject) => {
         try {
-            resolve(
-                Service.successResponse({
-                    uuid,
-                    uNKNOWNUnderscoreBASEUnderscoreTYPE,
-                })
-            )
+            var blogs = await Blog.findAll({ where: { uuid: uuid } })
+            if (blogs.length == 0) {
+                throw {
+                    message: 'Blog not found',
+                    status: 404,
+                }
+            }
+            var blog = blogs[0]
+
+            if (body.title !== undefined) {
+                blog.title = body.title
+            }
+            if (body.contents != undefined) {
+                blog.content = body.contents
+            }
+
+            await blog.save()
+
+            resolve(Service.successResponse(null))
         } catch (e) {
             reject(
                 Service.rejectResponse(

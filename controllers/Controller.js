@@ -133,16 +133,18 @@ class Controller {
         //     requestParams.body = request.body;
         //   }
         // }
-        request.openapi.schema.parameters.forEach((param) => {
-            if (param.in === 'path') {
-                requestParams[param.name] =
-                    request.openapi.pathParams[param.name]
-            } else if (param.in === 'query') {
-                requestParams[param.name] = request.query[param.name]
-            } else if (param.in === 'header') {
-                requestParams[param.name] = request.headers[param.name]
-            }
-        })
+        if (request.openapi.schema.parameters !== undefined) {
+            request.openapi.schema.parameters.forEach((param) => {
+                if (param.in === 'path') {
+                    requestParams[param.name] =
+                        request.openapi.pathParams[param.name]
+                } else if (param.in === 'query') {
+                    requestParams[param.name] = request.query[param.name]
+                } else if (param.in === 'header') {
+                    requestParams[param.name] = request.headers[param.name]
+                }
+            })
+        }
         return requestParams
     }
 
@@ -153,6 +155,7 @@ class Controller {
             )
             Controller.sendResponse(response, serviceResponse)
         } catch (error) {
+            console.log(error)
             Controller.sendError(response, error)
         }
     }
