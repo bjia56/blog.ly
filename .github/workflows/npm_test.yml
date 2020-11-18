@@ -42,7 +42,7 @@ jobs:
             - name: Test
               env:
                   DB_HOST: 127.0.0.1
-                  DB_PORT: 3306
+                  DB_PORT: ${{ job.services.mariadb.ports[3306] }}
                   DB_USER: blogly
                   DB_PASSWORD: blogly
                   DB_NAME: blogly
