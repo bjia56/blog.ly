@@ -3,7 +3,8 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
-import EditableLabel from 'react-inline-editing'
+import EditableLabel from 'react-inline-edition'
+import axios from 'axios'
 
 class Profile extends Component {
     constructor(props) {
@@ -13,16 +14,31 @@ class Profile extends Component {
             name: 'Placeholder Name',
             description: 'Placeholder Description',
             notificationPreference: 'Placeholder Notification',
+            updated: false,
         }
     }
 
+    componentDidMount() {
+        this.fetchData()
+    }
+
+    fetchData() {
+        const uuid = this.props.uuid || 1
+        axios.get(`/api/user?user=${uuid}`).then((resp) => {
+            const data = resp.data
+            delete data.uuid
+            this.setState({ updated: false, ...data })
+        })
+    }
+
     handleSave(field, text) {
-        this.setState({ [field]: text })
+        this.setState({ [field]: text, updated: true })
         console.log(field, text)
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.state !== prevState) {
+        if (this.state !== prevState && this.state.updated) {
+            // upload the change to server
         }
     }
 
@@ -36,6 +52,8 @@ class Profile extends Component {
                             <Col>
                                 <EditableLabel
                                     text={this.state.name}
+                                    inputClassName="input-name"
+                                    labelClassName="input-name"
                                     inputMaxLength={50}
                                     onFocusOut={this.handleSave.bind(
                                         this,
@@ -49,6 +67,8 @@ class Profile extends Component {
                             <Col>
                                 <EditableLabel
                                     text={this.state.description}
+                                    inputClassName="input-description"
+                                    labelClassName="input-description"
                                     inputMaxLength={50}
                                     onFocusOut={this.handleSave.bind(
                                         this,
@@ -62,6 +82,8 @@ class Profile extends Component {
                             <Col>
                                 <EditableLabel
                                     text={this.state.notificationPreference}
+                                    inputClassName="input-notification"
+                                    labelClassName="input-notification"
                                     inputMaxLength={50}
                                     onFocusOut={this.handleSave.bind(
                                         this,
