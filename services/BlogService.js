@@ -101,7 +101,7 @@ const apiBlogsUuidDELETE = ({ uuid }) =>
                 }
             }
             var blog = blogs[0]
-            await blog[0].destroy()
+            await blog.destroy()
 
             resolve(Service.successResponse(null))
         } catch (e) {

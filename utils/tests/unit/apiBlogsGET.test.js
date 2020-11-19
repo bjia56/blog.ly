@@ -79,12 +79,6 @@ describe('blog posts GET handler tests', () => {
                 name: 'John Doe',
                 notificationPreference: '',
             }),
-            db.Blog.build({
-                title: '',
-                author: 1,
-                uuid: 100,
-                updated: new Date(2020, 8, 12),
-            }),
             db.User.build({
                 uuid: 2,
                 username: 'jsmith',
@@ -92,28 +86,13 @@ describe('blog posts GET handler tests', () => {
                 name: 'John Smith',
                 notificationPreference: '',
             }),
-            db.Blog.build({
-                title: '',
-                author: 2,
-                uuid: 200,
-                updated: new Date(2020, 9, 1),
-            }),
-            db.Blog.build({
-                title: '',
-                author: 1,
-                uuid: 101,
-                updated: new Date(2020, 9, 14),
-            }),
-            db.Blog.build({
-                title: '',
-                author: 1,
-                uuid: 300,
-                updated: new Date(2020, 9, 15),
-            }),
+            db.Blog.build({ title: '', author: 1, uuid: 100 }),
+            db.Blog.build({ title: '', author: 2, uuid: 200 }),
+            db.Blog.build({ title: '', author: 1, uuid: 101 }),
+            db.Blog.build({ title: '', author: 1, uuid: 300 }),
         ])
 
         var data = await apiBlogsGET({})
-        console.log(data.payload.uuids)
         expect(typeof data.payload).toBe('object')
         expect('uuids' in data.payload)
         expect(data.payload.uuids.length).toBe(4)
