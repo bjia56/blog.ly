@@ -6,7 +6,7 @@
     "scripts": {
         "server": "node index.js",
         "build": "webpack --mode production",
-        "test": "jest",
+        "test": "jest --runInBand",
         "createDB": "node scripts/createDB.js"
     },
     "repository": {
