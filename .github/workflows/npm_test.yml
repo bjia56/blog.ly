@@ -1,0 +1,50 @@
+name: NPM Test
+
+on: [pull_request]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        services:
+            mariadb:
+                image: mariadb:latest
+                ports:
+                    - 3306
+                env:
+                    MYSQL_USER: blogly
+                    MYSQL_PASSWORD: blogly
+                    MYSQL_DATABASE: blogly
+                    MYSQL_ROOT_PASSWORD: rootpassword
+                options:
+                    --health-cmd="mysqladmin ping" --health-interval=5s
+                    --health-timeout=2s --health-retries=3
+
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Use Node.js
+              uses: actions/setup-node@v1
+              with:
+                  node-version: '12.x'
+
+            - name: Install dependencies
+              run: npm install --dev
+
+            - name: Verify MariaDB connection
+              env:
+                  PORT: ${{ job.services.mariadb.ports[3306] }}
+              run: |
+                  while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
+                    sleep 1
+                  done
+
+            - name: Test
+              env:
+                  DB_HOST: 127.0.0.1
+                  DB_PORT: ${{ job.services.mariadb.ports[3306] }}
+                  DB_USER: blogly
+                  DB_PASSWORD: blogly
+                  DB_NAME: blogly
+              run: |
+                  npm run test

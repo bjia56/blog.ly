@@ -8,6 +8,11 @@ const bodyParser = require('body-parser')
 const OpenApiValidator = require('express-openapi-validator')
 const config = require('./config')
 
+const webpack = require('webpack')
+const webpackDevMiddleware = require('webpack-dev-middleware')
+const webpackConfig = require('./webpack.config.js')
+const compiler = webpack(webpackConfig)
+
 class ExpressServer {
     constructor(port, openApiYaml) {
         this.port = port
@@ -18,6 +23,12 @@ class ExpressServer {
 
     setupMiddleware() {
         // this.setupAllowedMedia();
+        this.app.use(
+            webpackDevMiddleware(compiler, {
+                publicPath: webpackConfig.output.publicPath,
+            })
+        )
+
         this.app.use(cors())
         this.app.use(bodyParser.json({ limit: '14MB' }))
         this.app.use(express.json())
