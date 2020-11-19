@@ -81,7 +81,6 @@ describe('blog post Uuid GET handler tests', () => {
         ])
 
         var data = await apiBlogsUuidGET({ uuid: 100 })
-        console.log(data.payload)
         expect(data.code).toBe(200)
         expect(typeof data.payload).toBe('object')
         expect('uuid' in data.payload)
@@ -139,7 +138,6 @@ describe('blog post Uuid GET handler tests', () => {
         ])
 
         var data = await apiBlogsUuidGET({ uuid: 101 })
-        console.log(data.payload)
         expect(data.code).toBe(200)
         expect(typeof data.payload).toBe('object')
         expect('uuid' in data.payload)

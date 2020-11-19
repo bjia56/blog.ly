@@ -9,7 +9,6 @@ describe('user PUT handler tests', () => {
         let data = await apiUserPUT({
             uNKNOWNUnderscoreBASEUnderscoreTYPE: 'abc123',
         })
-        console.log(data)
         expect(data.code).toBe(200)
         expect(typeof data.payload).toBe('object')
         expect('uNKNOWNUnderscoreBASEUnderscoreTYPE' in data.payload)

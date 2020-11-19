@@ -1,8 +1,11 @@
-import { apiBlogsGET } from '../../../services/BlogService.js'
+import { apiBlogsGET, apiBlogsUuidPUT } from '../../../services/BlogService.js'
 import 'regenerator-runtime/runtime'
 
 const dbHelper = require('./dbHelper')
 const db = require('../../../sql')
+
+//helper function to create pause between each entry
+const delay = (ms) => new Promise((res) => setTimeout(res, ms))
 
 describe('blog posts GET handler tests', () => {
     test('get all blogs with no limit returns a list of ids', async () => {
@@ -70,34 +73,50 @@ describe('blog posts GET handler tests', () => {
         expect(data.code).toBe(200)
     })
 
-    test('get all blogs in decending order based on updated returns a list of ids', async () => {
-        await dbHelper.populateDatabase([
-            db.User.build({
-                uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
-                name: 'John Doe',
-                notificationPreference: '',
-            }),
-            db.User.build({
-                uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
-                name: 'John Smith',
-                notificationPreference: '',
-            }),
-            db.Blog.build({ title: '', author: 1, uuid: 100 }),
-            db.Blog.build({ title: '', author: 2, uuid: 200 }),
-            db.Blog.build({ title: '', author: 1, uuid: 101 }),
-            db.Blog.build({ title: '', author: 1, uuid: 300 }),
-        ])
+    test('get all blogs in descending order based on updated returns a list of ids', async () => {
+        await dbHelper.populateDatabase(
+            [
+                db.User.build({
+                    uuid: 1,
+                    username: 'jdoe',
+                    passwordHash: '',
+                    name: 'John Doe',
+                    notificationPreference: '',
+                }),
+                db.User.build({
+                    uuid: 2,
+                    username: 'jsmith',
+                    passwordHash: '',
+                    name: 'John Smith',
+                    notificationPreference: '',
+                }),
+                db.Blog.build({ title: '', author: 1, uuid: 100 }),
+                db.Blog.build({ title: '', author: 2, uuid: 200 }),
+                db.Blog.build({ title: '', author: 1, uuid: 101 }),
+                db.Blog.build({ title: '', author: 1, uuid: 300 }),
+            ],
+            true
+        )
+        await delay(1000)
+        await apiBlogsUuidPUT({ uuid: 100, body: { title: '100' } })
+
+        await delay(1000)
+        await apiBlogsUuidPUT({ uuid: 200, body: { title: '200' } })
+
+        await delay(1000)
+        await apiBlogsUuidPUT({ uuid: 101, body: { title: '101' } })
+
+        await delay(1000)
+        await apiBlogsUuidPUT({ uuid: 300, body: { title: '300' } })
 
         var data = await apiBlogsGET({})
         expect(typeof data.payload).toBe('object')
         expect('uuids' in data.payload)
         expect(data.payload.uuids.length).toBe(4)
         expect(data.payload.uuids[0]).toBe(300)
-        expect(data.payload.uuids[2]).toBe(100)
+        expect(data.payload.uuids[1]).toBe(101)
+        expect(data.payload.uuids[2]).toBe(200)
+        expect(data.payload.uuids[3]).toBe(100)
         expect(data.code).toBe(200)
     })
 
