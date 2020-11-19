@@ -32,6 +32,15 @@ describe('blog post Uuid GET handler tests', () => {
         })
     })
 
+    test('empty database returns reject error', async () => {
+        await dbHelper.populateDatabase([])
+
+        await expect(apiBlogsUuidGET({ uuid: 300 })).rejects.toEqual({
+            code: 404,
+            error: 'Blog not found',
+        })
+    })
+
     test('get blog with invalid input returns reject error', async () => {
         await dbHelper.populateDatabase([])
 

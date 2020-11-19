@@ -5,8 +5,14 @@ const dbHelper = require('./dbHelper')
 const db = require('../../../sql')
 
 describe('user PUT handler tests', () => {
-    test('dummy in place test', () => {
-        expect(1 + 1).toBe(2)
+    test('dummy test', async () => {
+        let data = await apiUserPUT({
+            uNKNOWNUnderscoreBASEUnderscoreTYPE: 'abc123',
+        })
+        console.log(data)
+        expect(data.code).toBe(200)
+        expect(typeof data.payload).toBe('object')
+        expect('uNKNOWNUnderscoreBASEUnderscoreTYPE' in data.payload)
     })
 })
 
