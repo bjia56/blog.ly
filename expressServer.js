@@ -6,7 +6,9 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const OpenApiValidator = require('express-openapi-validator')
-const config = require('./config')
+const config =
+
+    require('./config')
 
 const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
