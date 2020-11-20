@@ -6,6 +6,7 @@ const db = require('../../../sql')
 
 describe('user PUT handler tests', () => {
     test('dummy test', async () => {
+        await dbHelper.populateDatabase([])
         let data = await apiUserPUT({
             uNKNOWNUnderscoreBASEUnderscoreTYPE: 'abc123',
         })
