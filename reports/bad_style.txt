@@ -1,0 +1,4 @@
+Checking formatting...
+[warn] .babelrc
+[warn] expressServer.js
+[warn] Code style issues found in the above file(s). Forgot to run Prettier?

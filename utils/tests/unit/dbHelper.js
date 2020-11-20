@@ -1,3 +1,9 @@
+// This is a workaround for mysql1
+// See: https://github.com/sidorares/node-mysql2/issues/489
+import iconv from 'iconv-lite'
+import encodings from 'iconv-lite/encodings'
+iconv.encodings = encodings
+
 const db = require('../../../sql')
 
 // entries must be a list of objects constructed from
