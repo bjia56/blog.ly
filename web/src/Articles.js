@@ -73,7 +73,7 @@ class Articles extends Component {
                             key={article.uuid}
                             style={{ border: 0 }}
                         >
-                            <Card style={{ width: '18rem', width: '100%' }}>
+                            <Card style={{ width: '100%' }}>
                                 <Card.Body>
                                     <Card.Title>{article.title}</Card.Title>
                                     <Card.Text

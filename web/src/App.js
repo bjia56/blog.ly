@@ -4,7 +4,6 @@ import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
-import Container from 'react-bootstrap/Container'
 import { HashRouter as Router, Switch, Route, Link } from 'react-router-dom'
 
 import Profile from './Profile'
