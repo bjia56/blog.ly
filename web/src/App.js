@@ -8,6 +8,8 @@ import Container from 'react-bootstrap/Container'
 import { HashRouter as Router, Switch, Route, Link } from 'react-router-dom'
 
 import Profile from './Profile'
+import Articles from './Articles'
+import Edit from './Edit'
 
 class App extends Component {
     render() {
@@ -29,7 +31,9 @@ class App extends Component {
                             <Nav className="mr-auto">
                                 {/* These links are placeholders for now, will be modified once React Router is set up */}
                                 <Nav.Link href="#">Home</Nav.Link>
-                                <Nav.Link href="#">My Blog</Nav.Link>
+                                <Nav.Link as={Link} to="/articles">
+                                    Articles
+                                </Nav.Link>
                                 <Nav.Link as={Link} to="/profile">
                                     My Profile
                                 </Nav.Link>
@@ -45,13 +49,13 @@ class App extends Component {
                         </Navbar.Collapse>
                     </Navbar>
 
-                    <Container fluid="md">
-                        <Switch>
-                            <Route path="/profile">
-                                <Profile />
-                            </Route>
-                        </Switch>
-                    </Container>
+                    <Switch>
+                        <Route path="/profile">
+                            <Profile />
+                        </Route>
+                        <Route path="/articles" component={Articles}></Route>
+                        <Route path="/edit/:id" component={Edit}></Route>
+                    </Switch>
                 </Router>
             </div>
         )

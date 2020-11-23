@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebPackPlugin = require('html-webpack-plugin')
+const webpack = require('webpack')
 
 module.exports = {
     // set the default mode to be development.
@@ -11,6 +12,9 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'webpack.bundle.js',
+    },
+    resolve: {
+        fallback: { path: require.resolve('path-browserify') },
     },
     module: {
         rules: [
@@ -33,12 +37,26 @@ module.exports = {
                     },
                 ],
             },
+            {
+                test: /\.m?js/,
+                type: 'javascript/auto',
+                resolve: {
+                    fullySpecified: false,
+                },
+            },
+            {
+                test: /\.json$/,
+                loader: 'json-loader',
+            },
         ],
     },
     plugins: [
         new HtmlWebPackPlugin({
             template: './web/src/index.html',
             filename: './index.html',
+        }),
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
         }),
     ],
 }
