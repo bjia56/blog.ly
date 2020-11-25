@@ -8,10 +8,21 @@ const dbHelper = require('./dbHelper')
 const db = require('../../../sql')
 
 describe('blog post Uuid DELETE handler tests', () => {
-    test('delete blog when there are no blogs returns reject error', async () => {
+    test('delete blog when not logged in returns error', async () => {
         await dbHelper.populateDatabase([])
 
         await expect(apiBlogsUuidDELETE({ uuid: 200 })).rejects.toEqual({
+            code: 401,
+            error: 'Unauthorized',
+        })
+    })
+
+    test('delete blog when there are no blogs returns reject error', async () => {
+        await dbHelper.populateDatabase([])
+
+        await expect(
+            apiBlogsUuidDELETE({ uuid: 200 }, { uuid: 1 })
+        ).rejects.toEqual({
             code: 404,
             error: 'Blog not found',
         })
@@ -20,7 +31,7 @@ describe('blog post Uuid DELETE handler tests', () => {
     test('delete blog with invalid input returns reject error', async () => {
         await dbHelper.populateDatabase([])
 
-        await expect(apiBlogsUuidDELETE({})).rejects.toEqual({
+        await expect(apiBlogsUuidDELETE({}, { uuid: 1 })).rejects.toEqual({
             code: 405,
             error: 'WHERE parameter "uuid" has invalid "undefined" value',
         })
@@ -30,15 +41,16 @@ describe('blog post Uuid DELETE handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
             db.Blog.build({ title: '', author: 1, uuid: 100 }),
         ])
 
-        await expect(apiBlogsUuidDELETE({ uuid: 200 })).rejects.toEqual({
+        await expect(
+            apiBlogsUuidDELETE({ uuid: 200 }, { uuid: 1 })
+        ).rejects.toEqual({
             code: 404,
             error: 'Blog not found',
         })
@@ -48,16 +60,14 @@ describe('blog post Uuid DELETE handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
             db.Blog.build({ title: '', author: 1, uuid: 100 }),
             db.User.build({
                 uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
+                email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
             }),
@@ -65,7 +75,7 @@ describe('blog post Uuid DELETE handler tests', () => {
             db.Blog.build({ title: '', author: 1, uuid: 101 }),
         ])
 
-        var data = await apiBlogsUuidDELETE({ uuid: 100 })
+        var data = await apiBlogsUuidDELETE({ uuid: 100 }, { uuid: 1 })
         expect(data.payload).toBe(null)
         expect(data.code).toBe(200)
 
@@ -78,16 +88,14 @@ describe('blog post Uuid DELETE handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
             db.Blog.build({ title: '', author: 1, uuid: 100 }),
             db.User.build({
                 uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
+                email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
             }),
@@ -95,11 +103,11 @@ describe('blog post Uuid DELETE handler tests', () => {
             db.Blog.build({ title: '', author: 1, uuid: 101 }),
         ])
 
-        var data = await apiBlogsUuidDELETE({ uuid: 100 })
+        var data = await apiBlogsUuidDELETE({ uuid: 100 }, { uuid: 1 })
         expect(data.payload).toBe(null)
         expect(data.code).toBe(200)
 
-        var data2 = await apiBlogsUuidDELETE({ uuid: 101 })
+        var data2 = await apiBlogsUuidDELETE({ uuid: 101 }, { uuid: 1 })
         expect(data2.payload).toBe(null)
         expect(data2.code).toBe(200)
 

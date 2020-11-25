@@ -9,22 +9,20 @@ describe('user GET handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
             db.User.build({
                 uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
+                email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
             }),
         ])
 
         await expect(apiUserGET({ user: 4 })).rejects.toEqual({
-            code: 405,
+            code: 404,
             error: 'User not found',
         })
     })
@@ -33,17 +31,53 @@ describe('user GET handler tests', () => {
         await dbHelper.populateDatabase([])
 
         await expect(apiUserGET({ user: 4 })).rejects.toEqual({
-            code: 405,
+            code: 404,
             error: 'User not found',
         })
     })
 
-    test('put blog with invalid input returns reject error', async () => {
+    test('omitted parameter returns logged in user information', async () => {
+        await dbHelper.populateDatabase([
+            db.User.build({
+                uuid: 1,
+                email: 'jdoe@example.com',
+                name: 'John Doe',
+                notificationPreference: 'hourly',
+            }),
+            db.User.build({
+                uuid: 2,
+                email: 'jsmith@example.com',
+                name: 'John Smith',
+                notificationPreference: '',
+            }),
+        ])
+
+        var data = await apiUserGET({}, { uuid: 1 })
+        expect(data.code).toBe(200)
+        expect(typeof data.payload).toBe('object')
+        expect('uuid' in data.payload)
+        expect(typeof data.payload.uuid).toBe('number')
+        expect(data.payload.uuid).toBe(1)
+        expect('email' in data.payload)
+        expect(typeof data.payload.email).toBe('string')
+        expect(data.payload.email).toBe('jdoe@example.com')
+        expect('name' in data.payload)
+        expect(typeof data.payload.name).toBe('string')
+        expect(data.payload.name).toBe('John Doe')
+        expect('description' in data.payload)
+        expect(typeof data.payload.description).toBe('string')
+        expect(data.payload.description).toBe('')
+        expect('notificationPreference' in data.payload)
+        expect(typeof data.payload.notificationPreference).toBe('string')
+        expect(data.payload.notificationPreference).toBe('hourly')
+    })
+
+    test('omitted parameter when not logged in returns error', async () => {
         await dbHelper.populateDatabase([])
 
         await expect(apiUserGET({})).rejects.toEqual({
-            code: 405,
-            error: 'WHERE parameter "uuid" has invalid "undefined" value',
+            code: 401,
+            error: 'Unauthorized',
         })
     })
 
@@ -51,15 +85,13 @@ describe('user GET handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: 'hourly',
             }),
             db.User.build({
                 uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
+                email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
             }),
@@ -71,9 +103,9 @@ describe('user GET handler tests', () => {
         expect('uuid' in data.payload)
         expect(typeof data.payload.uuid).toBe('number')
         expect(data.payload.uuid).toBe(1)
-        expect('username' in data.payload)
-        expect(typeof data.payload.username).toBe('string')
-        expect(data.payload.username).toBe('jdoe')
+        expect('email' in data.payload)
+        expect(typeof data.payload.email).toBe('string')
+        expect(data.payload.email).toBe('jdoe@example.com')
         expect('name' in data.payload)
         expect(typeof data.payload.name).toBe('string')
         expect(data.payload.name).toBe('John Doe')
@@ -89,8 +121,7 @@ describe('user GET handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: 'hourly',
                 description:
@@ -98,8 +129,7 @@ describe('user GET handler tests', () => {
             }),
             db.User.build({
                 uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
+                email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
             }),
@@ -111,9 +141,9 @@ describe('user GET handler tests', () => {
         expect('uuid' in data.payload)
         expect(typeof data.payload.uuid).toBe('number')
         expect(data.payload.uuid).toBe(1)
-        expect('username' in data.payload)
-        expect(typeof data.payload.username).toBe('string')
-        expect(data.payload.username).toBe('jdoe')
+        expect('email' in data.payload)
+        expect(typeof data.payload.email).toBe('string')
+        expect(data.payload.email).toBe('jdoe@example.com')
         expect('name' in data.payload)
         expect(typeof data.payload.name).toBe('string')
         expect(data.payload.name).toBe('John Doe')

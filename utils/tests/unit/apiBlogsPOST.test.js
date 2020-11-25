@@ -9,15 +9,14 @@ describe('create Blog POST handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
             db.Blog.build({ title: '', author: 1, uuid: 100 }),
         ])
 
-        var data = await apiBlogsPOST()
+        var data = await apiBlogsPOST(null, { uuid: 1 })
         expect(typeof data.payload).toBe('object')
         expect('uuid' in data.payload)
         expect(typeof data.payload.uuid).toBe('number')
@@ -29,16 +28,15 @@ describe('create Blog POST handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
             db.Blog.build({ title: '', author: 1, uuid: 100 }),
         ])
 
-        var blogID1 = await apiBlogsPOST()
-        var blogID2 = await apiBlogsPOST()
+        var blogID1 = await apiBlogsPOST(null, { uuid: 1 })
+        var blogID2 = await apiBlogsPOST(null, { uuid: 1 })
         expect(blogID2.payload.uuid).toBe(blogID1.payload.uuid + 1)
     })
 })

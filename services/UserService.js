@@ -42,7 +42,7 @@ const apiUserGET = ({ user }, loggedInUser) =>
             resolve(
                 Service.successResponse({
                     uuid: user.uuid,
-                    username: user.username,
+                    email: user.email,
                     name: user.name,
                     description: user.description,
                     notificationPreference: user.notificationPreference,
@@ -69,7 +69,7 @@ const apiUserPUT = ({ body }, loggedInUser) =>
         try {
             requireAuthenticated(loggedInUser)
 
-            var users = await User.findall({
+            var users = await User.findAll({
                 where: { uuid: loggedInUser.uuid },
             })
             if (users.length == 0) {

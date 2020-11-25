@@ -12,16 +12,14 @@ describe('blog posts GET handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
             db.Blog.build({ title: '', author: 1, uuid: 100 }),
             db.User.build({
                 uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
+                email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
             }),
@@ -49,16 +47,14 @@ describe('blog posts GET handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
             db.Blog.build({ title: '', author: 1, uuid: 100 }),
             db.User.build({
                 uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
+                email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
             }),
@@ -78,15 +74,13 @@ describe('blog posts GET handler tests', () => {
             [
                 db.User.build({
                     uuid: 1,
-                    username: 'jdoe',
-                    passwordHash: '',
+                    email: 'jdoe@example.com',
                     name: 'John Doe',
                     notificationPreference: '',
                 }),
                 db.User.build({
                     uuid: 2,
-                    username: 'jsmith',
-                    passwordHash: '',
+                    email: 'jsmith@example.com',
                     name: 'John Smith',
                     notificationPreference: '',
                 }),
@@ -98,16 +92,28 @@ describe('blog posts GET handler tests', () => {
             true
         )
         await delay(1000)
-        await apiBlogsUuidPUT({ uuid: 100, body: { title: '100' } })
+        await apiBlogsUuidPUT(
+            { uuid: 100, body: { title: '100' } },
+            { uuid: 1 }
+        )
 
         await delay(1000)
-        await apiBlogsUuidPUT({ uuid: 200, body: { title: '200' } })
+        await apiBlogsUuidPUT(
+            { uuid: 200, body: { title: '200' } },
+            { uuid: 2 }
+        )
 
         await delay(1000)
-        await apiBlogsUuidPUT({ uuid: 101, body: { title: '101' } })
+        await apiBlogsUuidPUT(
+            { uuid: 101, body: { title: '101' } },
+            { uuid: 1 }
+        )
 
         await delay(1000)
-        await apiBlogsUuidPUT({ uuid: 300, body: { title: '300' } })
+        await apiBlogsUuidPUT(
+            { uuid: 300, body: { title: '300' } },
+            { uuid: 1 }
+        )
 
         var data = await apiBlogsGET({})
         expect(typeof data.payload).toBe('object')
@@ -124,16 +130,14 @@ describe('blog posts GET handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
             db.Blog.build({ title: '', author: 1, uuid: 100 }),
             db.User.build({
                 uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
+                email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
             }),
@@ -155,16 +159,14 @@ describe('blog posts GET handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
             db.Blog.build({ title: '', author: 1, uuid: 100 }),
             db.User.build({
                 uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
+                email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
             }),
@@ -185,16 +187,14 @@ describe('blog posts GET handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
             db.Blog.build({ title: '', author: 1, uuid: 100 }),
             db.User.build({
                 uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
+                email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
             }),

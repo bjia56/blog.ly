@@ -5,14 +5,25 @@ const dbHelper = require('./dbHelper')
 const db = require('../../../sql')
 
 describe('user PUT handler tests', () => {
-    test('dummy test', async () => {
-        await dbHelper.populateDatabase([])
-        let data = await apiUserPUT({
-            uNKNOWNUnderscoreBASEUnderscoreTYPE: 'abc123',
-        })
+    test('update user name', async () => {
+        await dbHelper.populateDatabase([
+            db.User.build({
+                uuid: 1,
+                email: 'jdoe@example.com',
+                name: 'John Doe',
+                notificationPreference: 'hourly',
+            }),
+        ])
+        let data = await apiUserPUT(
+            {
+                body: {
+                    name: 'John J Doe',
+                },
+            },
+            { uuid: 1 }
+        )
         expect(data.code).toBe(200)
-        expect(typeof data.payload).toBe('object')
-        expect('uNKNOWNUnderscoreBASEUnderscoreTYPE' in data.payload)
+        expect(data.payload).toBe(null)
     })
 })
 
