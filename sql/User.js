@@ -10,15 +10,11 @@ function constructModel(sequelize, models) {
                 primaryKey: true,
                 autoIncrement: true,
             },
-            username: {
+            email: {
                 type: Sequelize.STRING,
-                field: 'username',
+                field: 'email',
                 allowNull: false,
-            },
-            passwordHash: {
-                type: Sequelize.STRING,
-                field: 'passwordHash',
-                allowNull: false,
+                unique: true,
             },
             name: {
                 type: Sequelize.STRING,

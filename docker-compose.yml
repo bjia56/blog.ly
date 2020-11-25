@@ -20,6 +20,9 @@ services:
             DB_USER: blogly
             DB_PASSWORD: blogly
             DB_NAME: blogly
+            OAUTH20_CLIENT_ID: 552600159087-4edffngila0707hhrbk2rqt9gubej71r.apps.googleusercontent.com
+            OAUTH20_CLIENT_SECRET: AuVbVMRuczPnLycVNBt4lik8
+            EXPRESS_SESSION_KEY: keyboard cat
     database:
         image: mysql:5.7
         volumes:

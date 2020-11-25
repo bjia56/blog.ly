@@ -205,6 +205,9 @@ paths:
             tags:
                 - user
             summary: Get user information
+            description:
+                If the `user` parameter is not specified, returns information of
+                the currently logged in user.
             operationId: apiUserGET
             x-eov-operation-id: apiUserGET
             x-eov-operation-handler: controllers/UserController
@@ -212,7 +215,6 @@ paths:
                 - name: user
                   in: query
                   description: User uuid.
-                  required: true
                   schema:
                       type: integer
             responses:
@@ -361,8 +363,8 @@ components:
                 uuid:
                     description: User uuid
                     type: integer
-                username:
-                    description: User username
+                email:
+                    description: User email
                     type: string
                 name:
                     description: User name

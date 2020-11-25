@@ -32,8 +32,6 @@ function initializeModels() {
         (models.Blog = Blog(sequelize, models)),
         (models.Follow = Follow(sequelize, models)),
     ]
-
-    models.syncAll()
 }
 
 function getModels() {
