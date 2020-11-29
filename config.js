@@ -7,6 +7,9 @@ const config = {
     BASE_VERSION: 'v2',
     CONTROLLER_DIRECTORY: path.join(__dirname, 'controllers'),
     PROJECT_DIR: __dirname,
+    OAUTH20_CLIENT_ID: process.env.OAUTH20_CLIENT_ID,
+    OAUTH20_CLIENT_SECRET: process.env.OAUTH20_CLIENT_SECRET,
+    EXPRESS_SESSION_KEY: process.env.EXPRESS_SESSION_KEY,
 }
 config.OPENAPI_YAML = path.join(config.ROOT_DIR, 'api', 'openapi.yaml')
 config.FULL_PATH = `${config.URL_PATH}:${config.URL_PORT}/${config.BASE_VERSION}`

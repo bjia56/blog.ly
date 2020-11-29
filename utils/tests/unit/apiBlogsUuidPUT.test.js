@@ -14,16 +14,14 @@ describe('blog post Uuid PUT handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
             db.Blog.build({ title: '', author: 1, uuid: 100 }),
             db.User.build({
                 uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
+                email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
             }),
@@ -31,18 +29,20 @@ describe('blog post Uuid PUT handler tests', () => {
             db.Blog.build({ title: '', author: 1, uuid: 101 }),
         ])
 
-        await expect(apiBlogsUuidPUT({ uuid: 300, body: {} })).rejects.toEqual({
+        await expect(
+            apiBlogsUuidPUT({ uuid: 300, body: {} }, { uuid: 1 })
+        ).rejects.toEqual({
             code: 404,
             error: 'Blog not found',
         })
     })
 
-    test('put blog with invalid input returns reject error', async () => {
+    test('put blog without logging in returns reject error', async () => {
         await dbHelper.populateDatabase([])
 
         await expect(apiBlogsUuidPUT({})).rejects.toEqual({
-            code: 405,
-            error: 'WHERE parameter "uuid" has invalid "undefined" value',
+            code: 401,
+            error: 'Unauthorized',
         })
     })
 
@@ -50,8 +50,7 @@ describe('blog post Uuid PUT handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
@@ -69,14 +68,13 @@ describe('blog post Uuid PUT handler tests', () => {
             }),
             db.User.build({
                 uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
+                email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
             }),
         ])
         await delay(1000)
-        var data0 = await apiBlogsUuidPUT({ uuid: 100, body: {} })
+        var data0 = await apiBlogsUuidPUT({ uuid: 100, body: {} }, { uuid: 1 })
         expect(data0.code).toBe(200)
         expect(data0.payload).toBe(null)
 
@@ -110,8 +108,7 @@ describe('blog post Uuid PUT handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
@@ -129,17 +126,19 @@ describe('blog post Uuid PUT handler tests', () => {
             }),
             db.User.build({
                 uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
+                email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
             }),
         ])
         await delay(1000)
-        var data0 = await apiBlogsUuidPUT({
-            uuid: 100,
-            body: { contents: 'This is new content' },
-        })
+        var data0 = await apiBlogsUuidPUT(
+            {
+                uuid: 100,
+                body: { contents: 'This is new content' },
+            },
+            { uuid: 1 }
+        )
         expect(data0.code).toBe(200)
         expect(data0.payload).toBe(null)
 
@@ -173,8 +172,7 @@ describe('blog post Uuid PUT handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
@@ -192,18 +190,20 @@ describe('blog post Uuid PUT handler tests', () => {
             }),
             db.User.build({
                 uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
+                email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
             }),
         ])
 
         await delay(1000)
-        var data0 = await apiBlogsUuidPUT({
-            uuid: 100,
-            body: { title: 'This is new title' },
-        })
+        var data0 = await apiBlogsUuidPUT(
+            {
+                uuid: 100,
+                body: { title: 'This is new title' },
+            },
+            { uuid: 1 }
+        )
         expect(data0.code).toBe(200)
         expect(data0.payload).toBe(null)
 
@@ -237,8 +237,7 @@ describe('blog post Uuid PUT handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
@@ -256,21 +255,23 @@ describe('blog post Uuid PUT handler tests', () => {
             }),
             db.User.build({
                 uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
+                email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
             }),
         ])
 
         await delay(1000)
-        var data0 = await apiBlogsUuidPUT({
-            uuid: 100,
-            body: {
-                title: 'This is new title',
-                contents: 'This is new content',
+        var data0 = await apiBlogsUuidPUT(
+            {
+                uuid: 100,
+                body: {
+                    title: 'This is new title',
+                    contents: 'This is new content',
+                },
             },
-        })
+            { uuid: 1 }
+        )
         expect(data0.code).toBe(200)
         expect(data0.payload).toBe(null)
 
@@ -304,8 +305,7 @@ describe('blog post Uuid PUT handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
@@ -323,21 +323,23 @@ describe('blog post Uuid PUT handler tests', () => {
             }),
             db.User.build({
                 uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
+                email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
             }),
         ])
 
         await delay(1000)
-        var data0 = await apiBlogsUuidPUT({
-            uuid: 100,
-            body: {
-                title: 'This is new title',
-                contents: 'This is new content',
+        var data0 = await apiBlogsUuidPUT(
+            {
+                uuid: 100,
+                body: {
+                    title: 'This is new title',
+                    contents: 'This is new content',
+                },
             },
-        })
+            { uuid: 1 }
+        )
         expect(data0.code).toBe(200)
         expect(data0.payload).toBe(null)
 
@@ -367,13 +369,16 @@ describe('blog post Uuid PUT handler tests', () => {
         expect(data.payload.authorName).toBe('John Doe')
 
         await delay(1000)
-        var data1 = await apiBlogsUuidPUT({
-            uuid: 100,
-            body: {
-                title: '',
-                contents: '',
+        var data1 = await apiBlogsUuidPUT(
+            {
+                uuid: 100,
+                body: {
+                    title: '',
+                    contents: '',
+                },
             },
-        })
+            { uuid: 1 }
+        )
         expect(data1.code).toBe(200)
         expect(data1.payload).toBe(null)
 

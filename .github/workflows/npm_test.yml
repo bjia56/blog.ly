@@ -39,6 +39,9 @@ jobs:
                     sleep 1
                   done
 
+            - name: Create database tables
+              run: npm run createDB
+
             - name: Test
               env:
                   DB_HOST: 127.0.0.1

@@ -9,7 +9,9 @@ const config = require('../config')
 var models = null
 
 function initializeModels() {
-    var sequelize = new Sequelize(config.DATABASE_STRING)
+    var sequelize = new Sequelize(config.DATABASE_STRING, {
+        logging: false,
+    })
 
     var modelsList = []
     models = {
@@ -32,8 +34,6 @@ function initializeModels() {
         (models.Blog = Blog(sequelize, models)),
         (models.Follow = Follow(sequelize, models)),
     ]
-
-    models.syncAll()
 }
 
 function getModels() {

@@ -10,6 +10,15 @@ function toUnixTime(datetime) {
     return Math.floor(datetime.getTime() / 1000)
 }
 
+function requireAuthenticated(loggedInUser) {
+    if (loggedInUser == null || loggedInUser.uuid == null) {
+        throw {
+            message: 'Unauthorized',
+            status: 401,
+        }
+    }
+}
+
 /**
  * Get a list of blogs
  *
@@ -26,7 +35,7 @@ const apiBlogsGET = ({ author, cursor, limit }) =>
                 order: [['updated', 'DESC']],
                 where: {},
             }
-            if (author !== undefined) {
+            if (author != null) {
                 query.where.author = author
             }
             var results = await Blog.findAll(query)
@@ -45,35 +54,31 @@ const apiBlogsGET = ({ author, cursor, limit }) =>
             )
         }
     })
+
 /**
  * Create a new blog
  * This can only be done by users who have logged in.
  *
  * returns Integer
  * */
-const apiBlogsPOST = () =>
+const apiBlogsPOST = (_, loggedInUser) =>
     new Promise(async (resolve, reject) => {
         try {
-            User.create({
-                username: '',
-                passwordHash: '',
-                name: '',
-                notificationPreference: '',
-            }).then((user) => {
-                Blog.create({
-                    author: user.uuid,
-                    title: '',
-                }).then((blog) => {
-                    resolve(
-                        Service.successResponse(
-                            {
-                                uuid: blog.uuid,
-                            },
-                            201
-                        )
-                    )
-                })
+            requireAuthenticated(loggedInUser)
+
+            var blog = await Blog.create({
+                author: loggedInUser.uuid,
+                title: '',
             })
+
+            resolve(
+                Service.successResponse(
+                    {
+                        uuid: blog.uuid,
+                    },
+                    201
+                )
+            )
         } catch (e) {
             reject(
                 Service.rejectResponse(
@@ -83,6 +88,7 @@ const apiBlogsPOST = () =>
             )
         }
     })
+
 /**
  * Delete an existing blog
  * This can only be done by users who have logged in and on blogs that the user has authored.
@@ -90,9 +96,11 @@ const apiBlogsPOST = () =>
  * uuid Integer Blog uuid.
  * no response value expected for this operation
  * */
-const apiBlogsUuidDELETE = ({ uuid }) =>
+const apiBlogsUuidDELETE = ({ uuid }, loggedInUser) =>
     new Promise(async (resolve, reject) => {
         try {
+            requireAuthenticated(loggedInUser)
+
             var blogs = await Blog.findAll({ where: { uuid: uuid } })
             if (blogs.length == 0) {
                 throw {
@@ -100,9 +108,16 @@ const apiBlogsUuidDELETE = ({ uuid }) =>
                     status: 404,
                 }
             }
-            var blog = blogs[0]
-            await blog.destroy()
 
+            var blog = blogs[0]
+            if (blog.author !== loggedInUser.uuid) {
+                throw {
+                    message: 'Unauthorized',
+                    status: 403,
+                }
+            }
+
+            await blog.destroy()
             resolve(Service.successResponse(null))
         } catch (e) {
             reject(
@@ -113,6 +128,7 @@ const apiBlogsUuidDELETE = ({ uuid }) =>
             )
         }
     })
+
 /**
  * Get blog details
  *
@@ -162,17 +178,20 @@ const apiBlogsUuidGET = ({ uuid }) =>
             )
         }
     })
+
 /**
  * Update an existing blog
  * This can only be done by users who have logged in and on blogs that the user has authored.
  *
  * uuid Integer Blog uuid.
- * blogContents New blog contents
+ * body New blog contents
  * no response value expected for this operation
  * */
-const apiBlogsUuidPUT = ({ uuid, body }) =>
+const apiBlogsUuidPUT = ({ uuid, body }, loggedInUser) =>
     new Promise(async (resolve, reject) => {
         try {
+            requireAuthenticated(loggedInUser)
+
             var blogs = await Blog.findAll({ where: { uuid: uuid } })
             if (blogs.length == 0) {
                 throw {
@@ -180,12 +199,19 @@ const apiBlogsUuidPUT = ({ uuid, body }) =>
                     status: 404,
                 }
             }
-            var blog = blogs[0]
 
-            if (body.title !== undefined) {
+            var blog = blogs[0]
+            if (blog.author !== loggedInUser.uuid) {
+                throw {
+                    message: 'Unauthorized',
+                    status: 403,
+                }
+            }
+
+            if (body.title != null) {
                 blog.title = body.title
             }
-            if (body.contents != undefined) {
+            if (body.contents != null) {
                 blog.content = body.contents
             }
 

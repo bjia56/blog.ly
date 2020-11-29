@@ -150,7 +150,8 @@ class Controller {
     static async handleRequest(request, response, serviceOperation) {
         try {
             const serviceResponse = await serviceOperation(
-                this.collectRequestParams(request)
+                this.collectRequestParams(request),
+                request.user
             )
             Controller.sendResponse(response, serviceResponse)
         } catch (error) {

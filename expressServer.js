@@ -5,8 +5,10 @@ const express = require('express')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
+const session = require('express-session')
 const OpenApiValidator = require('express-openapi-validator')
 const config = require('./config')
+const oauth20 = require('./oauth20')
 
 const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
@@ -34,14 +36,23 @@ class ExpressServer {
         this.app.use(express.json())
         this.app.use(express.urlencoded({ extended: false }))
         this.app.use(cookieParser())
-        this.app.get('/login-redirect', (req, res) => {
-            res.status(200)
-            res.json(req.query)
+        this.app.use(session({ secret: config.EXPRESS_SESSION_KEY }))
+        this.app.use(oauth20.initialize())
+        this.app.use(oauth20.session())
+        this.app.get(
+            '/login',
+            oauth20.authenticate('google', { scope: ['profile', 'email'] })
+        )
+        this.app.get('/login/error', (req, res) => {
+            res.status(401).send('<h2>Login error. Unauthorized</h2>')
         })
-        this.app.get('/oauth2-redirect.html', (req, res) => {
-            res.status(200)
-            res.json(req.query)
-        })
+        this.app.get(
+            '/login/callback',
+            oauth20.authenticate('google', {
+                failureRedirect: '/login/error',
+                successRedirect: '/',
+            })
+        )
         this.app.use(
             OpenApiValidator.middleware({
                 apiSpec: this.openApiPath,

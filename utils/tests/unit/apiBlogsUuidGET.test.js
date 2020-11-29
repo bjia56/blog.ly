@@ -9,16 +9,14 @@ describe('blog post Uuid GET handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
             db.Blog.build({ title: '', author: 1, uuid: 100 }),
             db.User.build({
                 uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
+                email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
             }),
@@ -54,8 +52,7 @@ describe('blog post Uuid GET handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
@@ -73,8 +70,7 @@ describe('blog post Uuid GET handler tests', () => {
             }),
             db.User.build({
                 uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
+                email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
             }),
@@ -111,8 +107,7 @@ describe('blog post Uuid GET handler tests', () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
-                username: 'jdoe',
-                passwordHash: '',
+                email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
             }),
@@ -130,8 +125,7 @@ describe('blog post Uuid GET handler tests', () => {
             }),
             db.User.build({
                 uuid: 2,
-                username: 'jsmith',
-                passwordHash: '',
+                email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
             }),
