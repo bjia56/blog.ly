@@ -4,14 +4,14 @@ FROM ubuntu:bionic-20200921
 RUN apt update && apt upgrade -y
 
 # Install core necessities
-RUN apt install -y git curl make mysql-client
+RUN apt update && apt install -y git curl make mysql-client
 
 # Install Nodejs runtime
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt install -y nodejs
+RUN apt update && apt install -y nodejs
 
 # Install tools
-RUN apt install -y openjdk-11-jre
+RUN apt update && apt install -y openjdk-11-jre
 RUN npm install -g prettier && \
     npm install -g redoc-cli && \
     npm install -g @redocly/openapi-cli && \
