@@ -1,9 +1,14 @@
 {
-    "extensions": ["esbenp.prettier-vscode"],
-    "dockerComposeFile": ["docker-compose.yml"],
+    "extensions": [
+        "esbenp.prettier-vscode"
+    ],
+    "dockerComposeFile": [
+        "docker-compose.yml"
+    ],
     "service": "container",
     "workspaceFolder": "/workspace/coms4156",
     "settings": {
         "terminal.integrated.shell.linux": null
-    }
+    },
+    "postStartCommand": "npm ci && npm run createDB"
 }
