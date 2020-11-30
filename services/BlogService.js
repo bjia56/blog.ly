@@ -2,6 +2,8 @@ var MarkdownIt = require('markdown-it')()
 
 const Service = require('./Service')
 const Database = require('../sql')
+const config = require('../config')
+var twilio = require('twilio');
 
 const Blog = Database.Blog
 const User = Database.User
@@ -17,6 +19,24 @@ function requireAuthenticated(loggedInUser) {
             status: 401,
         }
     }
+}
+
+function sendNotification(toPhoneNumber) {
+    console.log('Entered Send Notification');
+    console.log('Twilio account ID:' + config.TWILIO_CLIENT_ID);
+    console.log('Twilio secret:' + config.TWILIO_CLIENT_SECRET);
+    //var client = new twilio(config.TWILIO_CLIENT_ID, config.TWILIO_CLIENT_SECRET);
+    const client = require('twilio')(config.TWILIO_CLIENT_ID, config.TWILIO_CLIENT_SECRET);
+    console.log('Created Client');
+    console.log('To Phone Number:' + toPhoneNumber);
+    console.log('Twilio Phone Number:' + config.TWILIO_PHONE_NUMBER);
+    client.messages.create({
+        body: 'Hello from Node',
+        to: toPhoneNumber,  // Text this number
+        from: config.TWILIO_PHONE_NUMBER // From a valid Twilio number
+    }).then((message) => console.log(message.sid));
+    console.log('Created Message');
+
 }
 
 /**
@@ -213,6 +233,11 @@ const apiBlogsUuidPUT = ({ uuid, body }, loggedInUser) =>
             }
             if (body.contents != null) {
                 blog.content = body.contents
+            }
+
+            if (body.title != null && body.contents != null) {
+                console.log('Entering Send Notification');
+                sendNotification('+19195645687');
             }
 
             await blog.save()
