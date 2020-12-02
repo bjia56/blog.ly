@@ -207,7 +207,8 @@ paths:
             summary: Get user information
             description:
                 If the `user` parameter is not specified, returns information of
-                the currently logged in user.
+                the currently logged in user. The user's phone number is only
+                returned when querying information about the logged-in user.
             operationId: apiUserGET
             x-eov-operation-id: apiUserGET
             x-eov-operation-handler: controllers/UserController
@@ -375,6 +376,9 @@ components:
                 notificationPreference:
                     description: Notification preference (TBD)
                     type: string
+                phone:
+                    description: User phone number
+                    type: string
         SearchResult:
             type: object
             properties:
@@ -407,4 +411,7 @@ components:
                     type: string
                 notificationPreference:
                     description: Notification preference (TBD)
+                    type: string
+                phone:
+                    description: User phone number
                     type: string
