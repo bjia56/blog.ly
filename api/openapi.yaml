@@ -375,6 +375,7 @@ components:
                 notificationPreference:
                     description: Notification preference (TBD)
                     type: string
+                    enum: [instant, hourly, daily]
         SearchResult:
             type: object
             properties:
@@ -408,3 +409,4 @@ components:
                 notificationPreference:
                     description: Notification preference (TBD)
                     type: string
+                    enum: [instant, hourly, daily]

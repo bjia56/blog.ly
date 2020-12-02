@@ -1,5 +1,7 @@
 const Sequelize = require('sequelize')
 
+const notificationPreferences = ['instant', 'hourly', 'daily']
+
 function constructModel(sequelize, models) {
     var User = sequelize.define(
         'user',
@@ -26,8 +28,13 @@ function constructModel(sequelize, models) {
                 field: 'description',
             },
             notificationPreference: {
-                type: Sequelize.STRING,
+                type: Sequelize.ENUM(notificationPreferences),
                 field: 'notificationPreference',
+                allowNull: false,
+            },
+            lastNotified: {
+                type: Sequelize.DATE,
+                field: 'lastNotified',
                 allowNull: false,
             },
         },

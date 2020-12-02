@@ -20,7 +20,8 @@ passport.use(
                 defaults: {
                     email: email,
                     name: name,
-                    notificationPreference: '',
+                    notificationPreference: 'instant',
+                    lastNotified: new Date(),
                 },
             }).then((user) => {
                 cb(null, { uuid: user[0].uuid })

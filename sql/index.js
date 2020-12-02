@@ -3,6 +3,7 @@ const Sequelize = require('sequelize')
 const Blog = require('./Blog')
 const Follow = require('./Follow')
 const User = require('./User')
+const NotificationQueue = require('./NotificationQueue')
 
 const config = require('../config')
 
@@ -33,6 +34,7 @@ function initializeModels() {
         (models.User = User(sequelize, models)),
         (models.Blog = Blog(sequelize, models)),
         (models.Follow = Follow(sequelize, models)),
+        (models.NotificationQueue = NotificationQueue(sequelize, models)),
     ]
 }
 
