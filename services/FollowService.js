@@ -20,6 +20,25 @@ function requireAuthenticated(loggedInUser) {
 const apiFollowDELETE = ({ user }, loggedInUser) =>
     new Promise(async (resolve, reject) => {
         try {
+            requireAuthenticated(loggedInUser)
+
+            var followRecords = await Follow.findAll({ where: { follower: user, followee: loggedInUser.uuid } })
+            if (followRecords.length == 0) {
+                throw {
+                    message: 'Follow record not found',
+                    status: 404,
+                }
+            }
+
+            var followRecord = followRecords[0]
+            if (followRecord.follower !== loggedInUser.uuid) {
+                throw {
+                    message: 'Unauthorized',
+                    status: 403,
+                }
+            }
+
+            await followRecord.destroy()
             resolve(
                 Service.successResponse({
                     user,
@@ -44,6 +63,12 @@ const apiFollowDELETE = ({ user }, loggedInUser) =>
 const apiFollowPOST = ({ user }, loggedInUser) =>
     new Promise(async (resolve, reject) => {
         try {
+            requireAuthenticated(loggedInUser)
+
+            var followRecord = await Follow.create({
+                follower: user,
+                followee: loggedInUser.uuid
+            })
             resolve(
                 Service.successResponse({
                     user,
