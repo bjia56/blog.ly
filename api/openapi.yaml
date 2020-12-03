@@ -246,6 +246,28 @@ paths:
                         schema:
                             $ref: '#/components/schemas/UpdateUser'
     /api/follow:
+        get:
+            tags:
+                - follow
+            summary: Get all users the loged-in user is following
+            description: This can only be done by users who have logged in.
+            operationId: apiFollowGET
+            x-eov-operation-id: apiFollowGET
+            x-eov-operation-handler: controllers/FollowController
+            responses:
+                '200':
+                    description: Success. Returns a list of user uuids.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    uuids:
+                                        type: array
+                                        items:
+                                            type: integer
+                '401':
+                    description: Unauthenticated. The user is not logged in.
         post:
             tags:
                 - follow

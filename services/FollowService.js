@@ -11,6 +11,28 @@ function requireAuthenticated(loggedInUser) {
 }
 
 /**
+ * Get all users the logged-in user is following
+ * This can only be done by users who have logged in.
+ *
+ * returns List
+ * */
+const apiFollowGET = (_, loggedInUser) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            requireAuthenticated(loggedInUser)
+
+            resolve(Service.successResponse({}))
+        } catch (e) {
+            reject(
+                Service.rejectResponse(
+                    e.message || 'Invalid input',
+                    e.status || 405
+                )
+            )
+        }
+    })
+
+/**
  * Delete a follow entry
  * This can only be done by users who have logged in.
  *
@@ -22,7 +44,9 @@ const apiFollowDELETE = ({ user }, loggedInUser) =>
         try {
             requireAuthenticated(loggedInUser)
 
-            var followRecords = await Follow.findAll({ where: { follower: loggedInUser.uuid, followee: user } })
+            var followRecords = await Follow.findAll({
+                where: { follower: loggedInUser.uuid, followee: user },
+            })
             if (followRecords.length == 0) {
                 throw {
                     message: 'Follow record not found',
@@ -53,6 +77,7 @@ const apiFollowDELETE = ({ user }, loggedInUser) =>
             )
         }
     })
+
 /**
  * Add a follow entry
  * This can only be done by users who have logged in.
@@ -67,7 +92,7 @@ const apiFollowPOST = ({ user }, loggedInUser) =>
 
             await Follow.create({
                 follower: loggedInUser.uuid,
-                followee: user
+                followee: user,
             })
             resolve(
                 Service.successResponse({
@@ -85,6 +110,7 @@ const apiFollowPOST = ({ user }, loggedInUser) =>
     })
 
 module.exports = {
+    apiFollowGET,
     apiFollowDELETE,
     apiFollowPOST,
 }

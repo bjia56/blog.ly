@@ -20,20 +20,30 @@ function requireAuthenticated(loggedInUser) {
     }
 }
 
-function sendNotifications(author) {
-    console.log('Entered Send Notification');
-    const client = require('twilio')(config.TWILIO_CLIENT_ID, config.TWILIO_CLIENT_SECRET);
-    console.log('Created Client');
-    var followers = await Follow.findAll({ where: { followee: author.uuid } });
-    for (var i = 0; i < followers.length; i++) {
-        var followerInfo = await User.findAll({ where: { uuid: followers[i].follower } });
-        client.messages.create({
-            body: 'Hello, a new blog post from ' + author.name + ' has been posted and is ready for you to read.',
-            to: followerInfo[0].phone,  // Text this number
-            from: config.TWILIO_PHONE_NUMBER // From a valid Twilio number
-        }).then((message) => console.log(message.sid));
-        console.log('Created Message for: ', followerInfo[0].name);
-    }
+async function sendNotifications(author) {
+    console.log('Entered Send Notification')
+    const client = require('twilio')(
+        config.TWILIO_CLIENT_ID,
+        config.TWILIO_CLIENT_SECRET
+    )
+    console.log('Created Client')
+    var followers = await Follow.findAll({ where: { followee: author.uuid } })
+    for (var i = 0; i < followers.length; i++) {
+        var followerInfo = await User.findAll({
+            where: { uuid: followers[i].follower },
+        })
+        client.messages
+            .create({
+                body:
+                    'Hello, a new blog post from ' +
+                    author.name +
+                    ' has been posted and is ready for you to read.',
+                to: followerInfo[0].phone, // Text this number
+                from: config.TWILIO_PHONE_NUMBER, // From a valid Twilio number
+            })
+            .then((message) => console.log(message.sid))
+        console.log('Created Message for: ', followerInfo[0].name)
+    }
 }
 
 /**
@@ -237,8 +247,8 @@ const apiBlogsUuidPUT = ({ uuid, body }, loggedInUser) =>
                     where: { uuid: blog.author },
                     limit: 1,
                 })
-                console.log('Author Results:' + JSON.stringify(author));
-                sendNotifications(author[0]);
+                console.log('Author Results:' + JSON.stringify(author))
+                sendNotifications(author[0])
             }
 
             await blog.save()
