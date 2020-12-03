@@ -36,6 +36,7 @@ class Articles extends Component {
                 )
             })
             .then((articles) => {
+                console.log(articles)
                 this.setState({ articles })
             })
             .catch((e) => {
@@ -50,6 +51,16 @@ class Articles extends Component {
             console.log('New Post uuid', uuid)
             this.props.history.push(`/edit/${uuid}`)
         })
+    }
+
+    onFollow(event) {
+        event.preventDefault()
+        console.log('clicked on follow')
+    }
+
+    onUnfollow(event) {
+        event.preventDefault()
+        console.log('clicked on unfollow')
     }
 
     render() {
@@ -73,9 +84,10 @@ class Articles extends Component {
                             key={article.uuid}
                             style={{ border: 0 }}
                         >
-                            <Card style={{ width: '100%' }}>
+                            <Card border="primary" style={{ width: '100%' }}>
                                 <Card.Body>
                                     <Card.Title>{article.title}</Card.Title>
+                                    <hr align="center" />
                                     <Card.Text
                                         dangerouslySetInnerHTML={{
                                             __html: article.rendered,
@@ -85,18 +97,34 @@ class Articles extends Component {
                                 <Card.Footer
                                     className="text-muted"
                                     style={{ display: 'flex' }}
+                                    variant="primary"
                                 >
                                     <div>
-                                        By {article.author} on{' '}
+                                        By {article.authorName} on{' '}
                                         {new Date(
                                             article.updated * 1000
                                         ).toLocaleDateString('en-US')}
                                     </div>
-                                    <div style={{ marginLeft: 'auto' }}>
-                                        <Link to={`/edit/${article.uuid}`}>
-                                            Edit
-                                        </Link>
-                                    </div>
+                                    {article.author == this.props.uuid && (
+                                        <div style={{ marginLeft: 'auto' }}>
+                                            <Link to={`/edit/${article.uuid}`}>
+                                                Edit
+                                            </Link>
+                                        </div>
+                                    )}
+                                    {article.author != this.props.uuid && (
+                                        <div style={{ marginLeft: 'auto' }}>
+                                            <a
+                                                onClick={this.onFollow.bind(
+                                                    this
+                                                )}
+                                                style={{ marginLeft: 'auto' }}
+                                                className="active"
+                                            >
+                                                Follow
+                                            </a>
+                                        </div>
+                                    )}
                                 </Card.Footer>
                             </Card>
                         </ListGroup.Item>

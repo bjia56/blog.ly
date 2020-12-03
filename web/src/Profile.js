@@ -4,6 +4,9 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
 import EditableLabel from 'react-inline-edition'
+import ListGroup from 'react-bootstrap/ListGroup'
+import { Link } from 'react-router-dom'
+import Button from 'react-bootstrap/Button'
 import axios from 'axios'
 
 class Profile extends Component {
@@ -16,14 +19,16 @@ class Profile extends Component {
             notificationPreference: 'Placeholder Notification',
             updated: false,
             err: '',
+            articles: [],
         }
     }
 
     componentDidMount() {
-        this.fetchData()
+        this.fetchProfileData()
+        this.fetchArticleData()
     }
 
-    fetchData() {
+    fetchProfileData() {
         const uuid = this.props.uuid || 1
         axios.get(`/api/user?user=${uuid}`).then((resp) => {
             const data = resp.data
@@ -32,9 +37,43 @@ class Profile extends Component {
         })
     }
 
+    fetchArticleData() {
+        const limit = 100
+        const author = this.props.uuid
+        axios
+            .get(`/api/blogs?limit=${limit}&author=${author}`)
+            .then((resp) => {
+                console.log(resp)
+                let uuids = resp.data.uuids || []
+                return Promise.all(
+                    uuids.map((uuid) =>
+                        axios
+                            .get(`/api/blogs/${uuid}`)
+                            .then((resp) => resp.data)
+                    )
+                )
+            })
+            .then((articles) => {
+                console.log(articles)
+                this.setState({ articles })
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+    }
+
     handleSave(field, text) {
         this.setState({ [field]: text, updated: true })
         console.log(field, text)
+    }
+
+    onNewArticle(event) {
+        event.preventDefault()
+        axios.post('/api/blogs').then((resp) => {
+            const { uuid } = resp.data
+            console.log('New Post uuid', uuid)
+            this.props.history.push(`/edit/${uuid}`)
+        })
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -69,14 +108,16 @@ class Profile extends Component {
                     )}
                     <Card body border="info" style={{ marginTop: 20 }}>
                         <Card.Header
-                            as="h5"
+                            as="h4"
                             style={{ background: 'transparent' }}
                         >
-                            Your Profile
+                            My Profile
                         </Card.Header>
                         <Card.Body>
-                            <Row>
-                                <Col xs={4}>Name</Col>
+                            <Row className="my-1">
+                                <Col xs={4} className="font-weight-bold">
+                                    Name
+                                </Col>
                                 <Col>
                                     <EditableLabel
                                         text={this.state.name}
@@ -90,8 +131,10 @@ class Profile extends Component {
                                     />
                                 </Col>
                             </Row>
-                            <Row>
-                                <Col xs={4}>Description</Col>
+                            <Row className="my-1">
+                                <Col xs={4} className="font-weight-bold">
+                                    Description
+                                </Col>
                                 <Col>
                                     <EditableLabel
                                         text={this.state.description}
@@ -105,8 +148,10 @@ class Profile extends Component {
                                     />
                                 </Col>
                             </Row>
-                            <Row>
-                                <Col xs={4}>Notification Preference</Col>
+                            <Row className="my-1">
+                                <Col xs={4} className="font-weight-bold">
+                                    Notification Preference
+                                </Col>
                                 <Col>
                                     <EditableLabel
                                         text={this.state.notificationPreference}
@@ -121,6 +166,68 @@ class Profile extends Component {
                                 </Col>
                             </Row>
                         </Card.Body>
+                    </Card>
+                    <Card body border="info" style={{ marginTop: 20 }}>
+                        <Card.Header
+                            as="h4"
+                            style={{
+                                display: 'flex',
+                                background: 'transparent',
+                            }}
+                        >
+                            My Articles
+                            <Button
+                                onClick={this.onNewArticle.bind(this)}
+                                style={{ marginLeft: 'auto' }}
+                            >
+                                New
+                            </Button>
+                        </Card.Header>
+                        <ListGroup>
+                            {this.state.articles.map((article) => (
+                                <ListGroup.Item
+                                    as="div"
+                                    key={article.uuid}
+                                    style={{ border: 0 }}
+                                >
+                                    <Card
+                                        border="primary"
+                                        style={{ width: '100%' }}
+                                    >
+                                        <Card.Body>
+                                            <Card.Title>
+                                                {article.title}
+                                            </Card.Title>
+                                            <hr align="center" />
+                                            <Card.Text
+                                                dangerouslySetInnerHTML={{
+                                                    __html: article.rendered,
+                                                }}
+                                            ></Card.Text>
+                                        </Card.Body>
+                                        <Card.Footer
+                                            className="text-muted"
+                                            style={{ display: 'flex' }}
+                                            variant="primary"
+                                        >
+                                            <div>
+                                                By {article.authorName} on{' '}
+                                                {new Date(
+                                                    article.updated * 1000
+                                                ).toLocaleDateString('en-US')}
+                                            </div>
+                                            <div style={{ marginLeft: 'auto' }}>
+                                                <Link
+                                                    to={`/edit/${article.uuid}`}
+                                                >
+                                                    Edit
+                                                </Link>
+                                            </div>
+                                        </Card.Footer>
+                                    </Card>
+                                </ListGroup.Item>
+                            ))}
+                        </ListGroup>
                     </Card>
                 </Container>
             </div>

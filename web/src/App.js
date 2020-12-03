@@ -22,7 +22,7 @@ class App extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            isLoggedIn: true,
+            isLoggedIn: false,
             user: {},
         }
     }
@@ -42,6 +42,8 @@ class App extends Component {
                         uuid: resp.data.uuid,
                     },
                 })
+                console.log(this.props)
+                // this.props.history.push('/articles')
             })
             .catch((e) => {
                 console.log(e)
@@ -54,12 +56,6 @@ class App extends Component {
     }
 
     render() {
-        // if (this.state.isLoggedIn) {
-        //     console.log('logged in')
-        //     console.log(this.props)
-        //     console.log(history)
-        //     return history.push('/#/articles')
-        // }
         return (
             <div className="App">
                 <Router>
@@ -114,7 +110,10 @@ class App extends Component {
                             path="/articles"
                             render={(props) => {
                                 return this.state.isLoggedIn ? (
-                                    <Articles {...props} />
+                                    <Articles
+                                        uuid={this.state.user.uuid}
+                                        {...props}
+                                    />
                                 ) : (
                                     <Redirect to="/loginPage" />
                                 )
@@ -133,7 +132,6 @@ class App extends Component {
                         <Route path="/loginPage" component={Login}></Route>
                         <Route exact path="/login" />
                         <Route
-                            exact
                             path="/"
                             render={(props) => {
                                 return this.state.isLoggedIn ? (

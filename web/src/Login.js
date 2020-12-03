@@ -5,6 +5,9 @@ import Jumbotron from 'react-bootstrap/Jumbotron'
 import { Redirect } from 'react-router-dom'
 
 class Login extends Component {
+    constructor(props) {
+        super(props)
+    }
     onLogin(event) {
         event.preventDefault()
         console.log('clicked on login')
