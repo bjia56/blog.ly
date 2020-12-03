@@ -91,6 +91,8 @@ const apiUserPUT = ({ body }, loggedInUser) =>
                 user.notificationPreference = body.notificationPreference
             }
 
+            await user.save()
+
             resolve(Service.successResponse(null))
         } catch (e) {
             reject(

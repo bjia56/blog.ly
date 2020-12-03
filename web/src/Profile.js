@@ -39,20 +39,21 @@ class Profile extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.state !== prevState && this.state.updated) {
+            this.setState({ updated: false })
             console.log(this.state)
             const body = {
                 name: this.state.name,
                 description: this.state.description,
                 notificationPreference: this.state.notificationPreference,
             }
-            // axios
-            //     .put(`/api/user`, body)
-            //     .then((resp) => {
-            //         this.setState({ err: false })
-            //     })
-            //     .catch(() => {
-            //         this.setState({ err: true })
-            //     })
+            axios
+                .put(`/api/user`, body)
+                .then((resp) => {
+                    this.setState({ err: false })
+                })
+                .catch(() => {
+                    this.setState({ err: true })
+                })
         }
     }
 

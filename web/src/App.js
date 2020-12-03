@@ -22,7 +22,7 @@ class App extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            isLoggedIn: false,
+            isLoggedIn: true,
             user: {},
         }
     }
@@ -31,15 +31,8 @@ class App extends Component {
         this.checkLogin()
     }
 
-    // componentDidUpdate() {
-    //     if (this.state.isLoggedIn) {
-    //         console.log('after login state change')
-    //         return history.push('/articles')
-    //     }
-    // }
-
     checkLogin() {
-        return axios
+        axios
             .get('/api/user')
             .then((resp) => {
                 console.log(resp)
@@ -106,9 +99,12 @@ class App extends Component {
                     <Switch>
                         <Route
                             path="/profile"
-                            render={() => {
+                            render={(props) => {
                                 return this.state.isLoggedIn ? (
-                                    <Profile uuid={this.state.user.uuid} />
+                                    <Profile
+                                        uuid={this.state.user.uuid}
+                                        {...props}
+                                    />
                                 ) : (
                                     <Redirect to="/loginPage" />
                                 )
@@ -116,9 +112,9 @@ class App extends Component {
                         ></Route>
                         <Route
                             path="/articles"
-                            render={() => {
+                            render={(props) => {
                                 return this.state.isLoggedIn ? (
-                                    <Articles />
+                                    <Articles {...props} />
                                 ) : (
                                     <Redirect to="/loginPage" />
                                 )
@@ -126,9 +122,9 @@ class App extends Component {
                         ></Route>
                         <Route
                             path="/edit/:id"
-                            render={() => {
+                            render={(props) => {
                                 return this.state.isLoggedIn ? (
-                                    <Edit />
+                                    <Edit {...props} />
                                 ) : (
                                     <Redirect to="/loginPage" />
                                 )
@@ -139,9 +135,12 @@ class App extends Component {
                         <Route
                             exact
                             path="/"
-                            render={() => {
+                            render={(props) => {
                                 return this.state.isLoggedIn ? (
-                                    <Profile uuid={this.state.user.uuid} />
+                                    <Profile
+                                        uuid={this.state.user.uuid}
+                                        {...props}
+                                    />
                                 ) : (
                                     <Redirect to="/loginPage" />
                                 )
