@@ -7,6 +7,8 @@ import EditableLabel from 'react-inline-edition'
 import ListGroup from 'react-bootstrap/ListGroup'
 import { Link } from 'react-router-dom'
 import Button from 'react-bootstrap/Button'
+import DropdownButton from 'react-bootstrap/DropdownButton'
+import Dropdown from 'react-bootstrap/Dropdown'
 import axios from 'axios'
 
 class Profile extends Component {
@@ -16,7 +18,7 @@ class Profile extends Component {
             username: '',
             name: 'Placeholder Name',
             description: 'Placeholder Description',
-            notificationPreference: 'Placeholder Notification',
+            notificationPreference: 'instant',
             updated: false,
             err: '',
             articles: [],
@@ -65,6 +67,12 @@ class Profile extends Component {
     handleSave(field, text) {
         this.setState({ [field]: text, updated: true })
         console.log(field, text)
+    }
+
+    handleSelect(eventKey, event) {
+        // event.preventDefault()
+        this.setState({ notificationPreference: eventKey, updated: true })
+        console.log(eventKey, event)
     }
 
     onNewArticle(event) {
@@ -153,7 +161,25 @@ class Profile extends Component {
                                     Notification Preference
                                 </Col>
                                 <Col>
-                                    <EditableLabel
+                                    <DropdownButton
+                                        id="dropdown-basic-button"
+                                        title={
+                                            this.state.notificationPreference
+                                        }
+                                        variant="outline-info"
+                                        onSelect={this.handleSelect.bind(this)}
+                                    >
+                                        <Dropdown.Item eventKey="instant">
+                                            Instant
+                                        </Dropdown.Item>
+                                        <Dropdown.Item eventKey="hourly">
+                                            Hourly
+                                        </Dropdown.Item>
+                                        <Dropdown.Item eventKey="daily">
+                                            Daily
+                                        </Dropdown.Item>
+                                    </DropdownButton>
+                                    {/* <EditableLabel
                                         text={this.state.notificationPreference}
                                         inputClassName="input-notification"
                                         labelClassName="input-notification"
@@ -162,7 +188,7 @@ class Profile extends Component {
                                             this,
                                             'notificationPreference'
                                         )}
-                                    />
+                                    /> */}
                                 </Col>
                             </Row>
                         </Card.Body>
