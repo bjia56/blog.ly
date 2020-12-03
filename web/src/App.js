@@ -4,14 +4,69 @@ import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
-import { HashRouter as Router, Switch, Route, Link } from 'react-router-dom'
-
+import {
+    HashRouter as Router,
+    Switch,
+    Route,
+    Link,
+    Redirect,
+} from 'react-router-dom'
+import { createBrowserHistory } from 'history'
 import Profile from './Profile'
 import Articles from './Articles'
 import Edit from './Edit'
+import Login from './Login'
+import axios from 'axios'
 
 class App extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            isLoggedIn: false,
+            user: {},
+        }
+    }
+
+    componentDidMount() {
+        this.checkLogin()
+    }
+
+    // componentDidUpdate() {
+    //     if (this.state.isLoggedIn) {
+    //         console.log('after login state change')
+    //         return history.push('/articles')
+    //     }
+    // }
+
+    checkLogin() {
+        return axios
+            .get('/api/user')
+            .then((resp) => {
+                console.log(resp)
+                this.setState({
+                    isLoggedIn: true,
+                    user: {
+                        uuid: resp.data.uuid,
+                    },
+                })
+            })
+            .catch((e) => {
+                console.log(e)
+                if (e.code == 401) {
+                    this.setState({
+                        isLoggedIn: false,
+                    })
+                }
+            })
+    }
+
     render() {
+        // if (this.state.isLoggedIn) {
+        //     console.log('logged in')
+        //     console.log(this.props)
+        //     console.log(history)
+        //     return history.push('/#/articles')
+        // }
         return (
             <div className="App">
                 <Router>
@@ -49,11 +104,49 @@ class App extends Component {
                     </Navbar>
 
                     <Switch>
-                        <Route path="/profile">
-                            <Profile />
-                        </Route>
-                        <Route path="/articles" component={Articles}></Route>
-                        <Route path="/edit/:id" component={Edit}></Route>
+                        <Route
+                            path="/profile"
+                            render={() => {
+                                return this.state.isLoggedIn ? (
+                                    <Profile uuid={this.state.user.uuid} />
+                                ) : (
+                                    <Redirect to="/loginPage" />
+                                )
+                            }}
+                        ></Route>
+                        <Route
+                            path="/articles"
+                            render={() => {
+                                return this.state.isLoggedIn ? (
+                                    <Articles />
+                                ) : (
+                                    <Redirect to="/loginPage" />
+                                )
+                            }}
+                        ></Route>
+                        <Route
+                            path="/edit/:id"
+                            render={() => {
+                                return this.state.isLoggedIn ? (
+                                    <Edit />
+                                ) : (
+                                    <Redirect to="/loginPage" />
+                                )
+                            }}
+                        ></Route>
+                        <Route path="/loginPage" component={Login}></Route>
+                        <Route exact path="/login" />
+                        <Route
+                            exact
+                            path="/"
+                            render={() => {
+                                return this.state.isLoggedIn ? (
+                                    <Profile uuid={this.state.user.uuid} />
+                                ) : (
+                                    <Redirect to="/loginPage" />
+                                )
+                            }}
+                        ></Route>
                     </Switch>
                 </Router>
             </div>
