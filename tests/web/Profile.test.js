@@ -1,6 +1,6 @@
 import React from 'react'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
-import Profile from '../src/Profile'
+import Profile from '../../web/src/Profile'
 
 var axios = require('axios')
 var MockAdapter = require('axios-mock-adapter')
