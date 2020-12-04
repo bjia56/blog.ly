@@ -25,7 +25,6 @@ class Articles extends Component {
         axios
             .get(`/api/blogs?limit=${limit}`)
             .then((resp) => {
-                console.log(resp)
                 let uuids = resp.data.uuids || []
                 return Promise.all(
                     uuids.map((uuid) =>
@@ -36,7 +35,6 @@ class Articles extends Component {
                 )
             })
             .then((articles) => {
-                console.log(articles)
                 this.setState({ articles })
             })
             .catch((e) => {
@@ -67,6 +65,7 @@ class Articles extends Component {
         return (
             <Container style={{ marginTop: 20 }} fluid="md">
                 <div style={{ display: 'flex', margin: 20 }}>
+                    <h4 className="ml-2">All Articles</h4>
                     <Button
                         onClick={this.onNewArticle.bind(this)}
                         style={{ marginLeft: 'auto' }}
@@ -100,7 +99,17 @@ class Articles extends Component {
                                     variant="primary"
                                 >
                                     <div>
-                                        By {article.authorName} on{' '}
+                                        By{' '}
+                                        {article.author == this.props.uuid &&
+                                            article.authorName}
+                                        {article.author != this.props.uuid && (
+                                            <Link
+                                                to={`/user/${article.author}`}
+                                            >
+                                                {article.authorName}
+                                            </Link>
+                                        )}{' '}
+                                        on{' '}
                                         {new Date(
                                             article.updated * 1000
                                         ).toLocaleDateString('en-US')}

@@ -16,6 +16,7 @@ import Profile from './Profile'
 import Articles from './Articles'
 import Edit from './Edit'
 import Login from './Login'
+import User from './User'
 import axios from 'axios'
 
 class App extends Component {
@@ -42,8 +43,6 @@ class App extends Component {
                         uuid: resp.data.uuid,
                     },
                 })
-                console.log(this.props)
-                // this.props.history.push('/articles')
             })
             .catch((e) => {
                 console.log(e)
@@ -129,7 +128,25 @@ class App extends Component {
                                 )
                             }}
                         ></Route>
-                        <Route path="/loginPage" component={Login}></Route>
+                        <Route
+                            path="/user/:id"
+                            render={(props) => {
+                                return this.state.isLoggedIn ? (
+                                    <User {...props} />
+                                ) : (
+                                    <Redirect to="/loginPage" />
+                                )
+                            }}
+                        ></Route>
+                        <Route
+                            path="/loginPage"
+                            render={(props) => (
+                                <Login
+                                    {...props}
+                                    isLogin={this.state.isLoggedIn}
+                                />
+                            )}
+                        ></Route>
                         <Route exact path="/login" />
                         <Route
                             path="/"

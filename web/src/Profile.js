@@ -45,7 +45,6 @@ class Profile extends Component {
         axios
             .get(`/api/blogs?limit=${limit}&author=${author}`)
             .then((resp) => {
-                console.log(resp)
                 let uuids = resp.data.uuids || []
                 return Promise.all(
                     uuids.map((uuid) =>
@@ -56,7 +55,6 @@ class Profile extends Component {
                 )
             })
             .then((articles) => {
-                console.log(articles)
                 this.setState({ articles })
             })
             .catch((e) => {
@@ -179,16 +177,6 @@ class Profile extends Component {
                                             Daily
                                         </Dropdown.Item>
                                     </DropdownButton>
-                                    {/* <EditableLabel
-                                        text={this.state.notificationPreference}
-                                        inputClassName="input-notification"
-                                        labelClassName="input-notification"
-                                        inputMaxLength={50}
-                                        onFocusOut={this.handleSave.bind(
-                                            this,
-                                            'notificationPreference'
-                                        )}
-                                    /> */}
                                 </Col>
                             </Row>
                         </Card.Body>
