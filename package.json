@@ -76,6 +76,8 @@
             "global": {
                 "branches": 90
             }
-        }
+        },
+        "resetModules": true,
+        "testTimeout": 60000
     }
 }

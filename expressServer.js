@@ -25,11 +25,10 @@ class ExpressServer {
 
     setupMiddleware() {
         // this.setupAllowedMedia();
-        this.app.use(
-            webpackDevMiddleware(compiler, {
-                publicPath: webpackConfig.output.publicPath,
-            })
-        )
+        this.webpack = webpackDevMiddleware(compiler, {
+            publicPath: webpackConfig.output.publicPath,
+        })
+        this.app.use(this.webpack)
 
         this.app.use(cors())
         this.app.use(bodyParser.json({ limit: '14MB' }))
@@ -70,13 +69,21 @@ class ExpressServer {
         })
     }
 
-    launch() {
-        http.createServer(this.app).listen(this.port)
+    async launch() {
+        this.server = http.createServer(this.app).listen(this.port)
         console.log(`Listening on port ${this.port}`)
+
+        console.log('Waiting for webpack to be valid')
+        await new Promise((resolve) =>
+            this.webpack.waitUntilValid(() => resolve())
+        )
+
+        console.log('Server now launched')
     }
 
     async close() {
         if (this.server !== undefined) {
+            await this.webpack.close()
             await this.server.close()
             console.log(`Server on port ${this.port} shut down`)
         }
