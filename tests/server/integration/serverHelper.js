@@ -1,6 +1,7 @@
 const passport = require('passport')
 const MockStrategy = require('passport-mock-strategy')
 const http = require('http')
+const axios = require('axios')
 
 const ExpressServer = require('../../../expressServer')
 const config = require('../../../config')
@@ -53,93 +54,37 @@ class SessionHTTPClient {
     }
 
     async get(path) {
-        return new Promise((resolve, reject) => {
-            var req = http.request(
-                `${BASE_URL}${path}`,
-                {
-                    method: 'GET',
-                    headers: { Cookie: this.cookie },
-                },
-                (res) => {
-                    var result = {
-                        status: res.statusCode,
-                        headers: res.headers,
-                        contents: '',
-                    }
-                    res.on('data', (chunk) => (result.contents += chunk))
-                    res.on('end', () => resolve(result))
-                }
-            )
-            req.on('error', reject)
-            req.end()
+        var client = axios.create({
+            method: 'GET',
+            headers: { common: { Cookie: this.cookie } },
         })
+        return client(`${BASE_URL}${path}`)
     }
 
     async delete(path) {
-        return new Promise((resolve) => {
-            http.request(
-                `${BASE_URL}${path}`,
-                {
-                    method: 'DELETE',
-                    headers: { Cookie: this.cookie },
-                },
-                (res) => {
-                    var result = {
-                        status: res.statusCode,
-                        headers: res.headers,
-                        contents: '',
-                    }
-                    res.on('data', (chunk) => (result.contents += chunk))
-                    res.on('end', () => resolve(result))
-                }
-            ).end()
+        var client = axios.create({
+            method: 'DELETE',
+            headers: { common: { Cookie: this.cookie } },
         })
+        return client(`${BASE_URL}${path}`)
     }
 
     async post(path, body) {
-        return new Promise((resolve) => {
-            var req = http.request(
-                `${BASE_URL}${path}`,
-                {
-                    method: 'POST',
-                    headers: { Cookie: this.cookie },
-                },
-                (res) => {
-                    var result = {
-                        status: res.statusCode,
-                        headers: res.headers,
-                        contents: '',
-                    }
-                    res.on('data', (chunk) => (result.contents += chunk))
-                    res.on('end', () => resolve(result))
-                }
-            )
-            req.write(body)
-            req.end()
+        var client = axios.create({
+            method: 'POST',
+            data: body,
+            headers: { common: { Cookie: this.cookie } },
         })
+        return client(`${BASE_URL}${path}`)
     }
 
     async put(path, body) {
-        return new Promise((resolve) => {
-            var req = http.request(
-                `${BASE_URL}${path}`,
-                {
-                    method: 'PUT',
-                    headers: { Cookie: this.cookie },
-                },
-                (res) => {
-                    var result = {
-                        status: res.statusCode,
-                        headers: res.headers,
-                        contents: '',
-                    }
-                    res.on('data', (chunk) => (result.contents += chunk))
-                    res.on('end', () => resolve(result))
-                }
-            )
-            req.write(body)
-            req.end()
+        var client = axios.create({
+            method: 'PUT',
+            data: body,
+            headers: { common: { Cookie: this.cookie } },
         })
+        return client(`${BASE_URL}${path}`)
     }
 }
 

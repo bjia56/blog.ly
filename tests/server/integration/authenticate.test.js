@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 const {
     buildServerWithMockAuthentication,
     SessionHTTPClient,
@@ -32,9 +36,10 @@ describe('check mock authentication', () => {
             }),
         ])
 
-        var response = await client.get('/api/user')
-        //expect(response.status).toBe(200)
-        //expect(JSON.parse(response.contents).uuid).toBe(MOCK_UUID)
+        await client.get('/api/user').then((response) => {
+            expect(response.status).toBe(200)
+            expect(response.data.uuid).toBe(MOCK_UUID)
+        })
     })
 })
 

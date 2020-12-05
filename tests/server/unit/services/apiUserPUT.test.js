@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { apiUserPUT } from '../../../../services/UserService.js'
 import 'regenerator-runtime/runtime'
 

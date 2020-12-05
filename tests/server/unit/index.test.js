@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 const index = require('../../../index')
 
 describe('index tests', () => {

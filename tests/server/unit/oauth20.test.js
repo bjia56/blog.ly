@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 const passport = require('passport')
 const oauth20 = require('../../../oauth20')
 

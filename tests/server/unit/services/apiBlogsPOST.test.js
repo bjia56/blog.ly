@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { apiBlogsPOST } from '../../../../services/BlogService.js'
 import 'regenerator-runtime/runtime'
 

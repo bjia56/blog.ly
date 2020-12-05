@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { apiBlogsUuidGET } from '../../../../services/BlogService.js'
 import 'regenerator-runtime/runtime'
 
