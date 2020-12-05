@@ -13,11 +13,25 @@ class Articles extends Component {
         super(props)
         this.state = {
             articles: [],
+            following: [],
         }
     }
 
     componentDidMount() {
         this.fetchData()
+        this.fetchFollowingData()
+    }
+
+    fetchFollowingData() {
+        axios
+            .get(`/api/follow`)
+            .then((resp) => {
+                console.log(resp)
+                this.setState({ following: resp.data.uuids })
+            })
+            .catch((e) => {
+                console.log(e)
+            })
     }
 
     fetchData() {
@@ -51,14 +65,33 @@ class Articles extends Component {
         })
     }
 
-    onFollow(event) {
+    onFollow(user, event) {
         event.preventDefault()
         console.log('clicked on follow')
+        axios
+            .post(`/api/follow?user=${user}`)
+            .then((resp) => {
+                this.setState({ following: [...this.state.following, user] })
+            })
+            .catch((e) => {
+                console.log(e)
+            })
     }
 
-    onUnfollow(event) {
+    onUnfollow(user, event) {
         event.preventDefault()
         console.log('clicked on unfollow')
+        axios
+            .delete(`/api/follow?user=${user}`)
+            .then((resp) => {
+                let index = this.state.following.indexOf(user)
+                this.setState({
+                    following: this.state.following.splice(index, 1),
+                })
+            })
+            .catch((e) => {
+                console.log(e)
+            })
     }
 
     render() {
@@ -121,19 +154,44 @@ class Articles extends Component {
                                             </Link>
                                         </div>
                                     )}
-                                    {article.author != this.props.uuid && (
-                                        <div style={{ marginLeft: 'auto' }}>
-                                            <a
-                                                onClick={this.onFollow.bind(
-                                                    this
-                                                )}
-                                                style={{ marginLeft: 'auto' }}
-                                                className="active"
-                                            >
-                                                Follow
-                                            </a>
-                                        </div>
-                                    )}
+                                    {article.author != this.props.uuid &&
+                                        !this.state.following.includes(
+                                            article.author
+                                        ) && (
+                                            <div style={{ marginLeft: 'auto' }}>
+                                                <a
+                                                    onClick={this.onFollow.bind(
+                                                        this,
+                                                        article.author
+                                                    )}
+                                                    style={{
+                                                        marginLeft: 'auto',
+                                                    }}
+                                                    className="active"
+                                                >
+                                                    Follow
+                                                </a>
+                                            </div>
+                                        )}
+                                    {article.author != this.props.uuid &&
+                                        this.state.following.includes(
+                                            article.author
+                                        ) && (
+                                            <div style={{ marginLeft: 'auto' }}>
+                                                <a
+                                                    onClick={this.onUnfollow.bind(
+                                                        this,
+                                                        article.author
+                                                    )}
+                                                    style={{
+                                                        marginLeft: 'auto',
+                                                    }}
+                                                    className="active"
+                                                >
+                                                    Unfollow
+                                                </a>
+                                            </div>
+                                        )}
                                 </Card.Footer>
                             </Card>
                         </ListGroup.Item>

@@ -15,19 +15,32 @@ class User extends Component {
             description: 'Placeholder Description',
             err: '',
             articles: [],
+            following: [],
         }
     }
 
     componentDidMount() {
         this.fetchProfileData()
         this.fetchArticleData()
+        this.fetchFollowingData()
+    }
+
+    fetchFollowingData() {
+        axios
+            .get(`/api/follow`)
+            .then((resp) => {
+                console.log(resp)
+                this.setState({ following: resp.data.uuids })
+            })
+            .catch((e) => {
+                console.log(e)
+            })
     }
 
     fetchProfileData() {
         let { id } = this.props.match.params
         axios.get(`/api/user?user=${id}`).then((resp) => {
             const data = resp.data
-            delete data.uuid
             delete data.notificationPreference
             this.setState({ ...data })
         })
@@ -85,12 +98,24 @@ class User extends Component {
                             }}
                         >
                             {this.state.name}
-                            <Button
-                                onClick={this.onFollow.bind(this)}
-                                style={{ marginLeft: 'auto' }}
-                            >
-                                Follow
-                            </Button>
+                            {this.state.following.includes(this.state.uuid) && (
+                                <Button
+                                    onClick={this.onUnfollow.bind(this)}
+                                    style={{ marginLeft: 'auto' }}
+                                >
+                                    Unfollow
+                                </Button>
+                            )}
+                            {!this.state.following.includes(
+                                this.state.uuid
+                            ) && (
+                                <Button
+                                    onClick={this.onFollow.bind(this)}
+                                    style={{ marginLeft: 'auto' }}
+                                >
+                                    Follow
+                                </Button>
+                            )}
                         </Card.Header>
                         <Card.Body>{this.state.description}</Card.Body>
                     </Card>

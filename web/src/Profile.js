@@ -18,25 +18,59 @@ class Profile extends Component {
             username: '',
             name: 'Placeholder Name',
             description: 'Placeholder Description',
+            phone: 'Placeholder Phone',
             notificationPreference: 'instant',
             updated: false,
             err: '',
             articles: [],
+            following: [],
         }
     }
 
     componentDidMount() {
         this.fetchProfileData()
         this.fetchArticleData()
+        this.fetchFollowingData()
+    }
+
+    fetchFollowingData() {
+        axios
+            .get(`/api/follow`)
+            .then((resp) => {
+                let uuids = resp.data.uuids || []
+                return Promise.all(
+                    uuids.map((uuid) =>
+                        axios
+                            .get(`/api/user?user=${uuid}`)
+                            .then((resp) => resp.data)
+                    )
+                )
+            })
+            .then((users) => {
+                this.setState({ following: users })
+            })
+            .catch((e) => {
+                console.log(e)
+            })
     }
 
     fetchProfileData() {
         const uuid = this.props.uuid || 1
-        axios.get(`/api/user?user=${uuid}`).then((resp) => {
-            const data = resp.data
-            delete data.uuid
-            this.setState({ updated: false, ...data })
-        })
+        axios
+            .get(`/api/user?user=${uuid}`)
+            .then((resp) => {
+                const data = resp.data
+                console.log(data)
+                if (!data.phone) {
+                    data.phone = ''
+                }
+                delete data.uuid
+                console.log(data)
+                this.setState({ updated: false, ...data })
+            })
+            .catch((e) => {
+                console.log(e)
+            })
     }
 
     fetchArticleData() {
@@ -82,6 +116,11 @@ class Profile extends Component {
         })
     }
 
+    onUserClick(event) {
+        console.log(event)
+        this.props.history.push(`/user/${event}`)
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.state !== prevState && this.state.updated) {
             this.setState({ updated: false })
@@ -90,6 +129,7 @@ class Profile extends Component {
                 name: this.state.name,
                 description: this.state.description,
                 notificationPreference: this.state.notificationPreference,
+                phone: this.state.phone,
             }
             axios
                 .put(`/api/user`, body)
@@ -156,11 +196,28 @@ class Profile extends Component {
                             </Row>
                             <Row className="my-1">
                                 <Col xs={4} className="font-weight-bold">
+                                    Phone Number
+                                </Col>
+                                <Col>
+                                    <EditableLabel
+                                        text={this.state.phone}
+                                        inputClassName="input-phone"
+                                        labelClassName="input-phone"
+                                        inputMaxLength={50}
+                                        onFocusOut={this.handleSave.bind(
+                                            this,
+                                            'phone'
+                                        )}
+                                    />
+                                </Col>
+                            </Row>
+                            <Row className="my-1">
+                                <Col xs={4} className="font-weight-bold">
                                     Notification Preference
                                 </Col>
                                 <Col>
                                     <DropdownButton
-                                        id="dropdown-basic-button"
+                                        id="dropdown-notification"
                                         title={
                                             this.state.notificationPreference
                                         }
@@ -176,6 +233,29 @@ class Profile extends Component {
                                         <Dropdown.Item eventKey="daily">
                                             Daily
                                         </Dropdown.Item>
+                                    </DropdownButton>
+                                </Col>
+                            </Row>
+                            <Row className="my-1">
+                                <Col xs={4} className="font-weight-bold">
+                                    Following
+                                </Col>
+                                <Col>
+                                    <DropdownButton
+                                        id="dropdown-following"
+                                        title="Following"
+                                    >
+                                        {this.state.following.map((user) => (
+                                            <Dropdown.Item
+                                                eventKey={user.uuid}
+                                                onClick={this.onUserClick.bind(
+                                                    this,
+                                                    user.uuid
+                                                )}
+                                            >
+                                                {user.name}
+                                            </Dropdown.Item>
+                                        ))}
                                     </DropdownButton>
                                 </Col>
                             </Row>
