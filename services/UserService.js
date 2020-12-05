@@ -21,9 +21,11 @@ function requireAuthenticated(loggedInUser) {
 const apiUserGET = ({ user }, loggedInUser) =>
     new Promise(async (resolve, reject) => {
         try {
+            var isLoggedIn = false
             if (user == null) {
                 requireAuthenticated(loggedInUser)
                 user = loggedInUser.uuid
+                isLoggedIn = true
             }
 
             var users = await User.findAll({ where: { uuid: user } })
@@ -39,15 +41,23 @@ const apiUserGET = ({ user }, loggedInUser) =>
                 user.description = ''
             }
 
-            resolve(
-                Service.successResponse({
-                    uuid: user.uuid,
-                    email: user.email,
-                    name: user.name,
-                    description: user.description,
-                    notificationPreference: user.notificationPreference,
-                })
-            )
+            var response = {
+                uuid: user.uuid,
+                email: user.email,
+                name: user.name,
+                description: user.description,
+                notificationPreference: user.notificationPreference,
+            }
+
+            if (
+                isLoggedIn &&
+                user.uuid == loggedInUser.uuid &&
+                user.phone != null
+            ) {
+                response.phone = user.phone
+            }
+
+            resolve(Service.successResponse(response))
         } catch (e) {
             reject(
                 Service.rejectResponse(
@@ -90,6 +100,11 @@ const apiUserPUT = ({ body }, loggedInUser) =>
             if (body.notificationPreference != null) {
                 user.notificationPreference = body.notificationPreference
             }
+            if (body.phone != null) {
+                user.phone = body.phone
+            }
+
+            await user.save()
 
             await user.save()
 
