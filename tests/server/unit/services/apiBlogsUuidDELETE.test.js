@@ -121,9 +121,3 @@ describe('blog post Uuid DELETE handler tests', () => {
         expect(data3.payload.uuids.includes(101)).toBeFalsy()
     })
 })
-
-afterAll(async (done) => {
-    // close db after completion
-    await db.close()
-    done()
-})

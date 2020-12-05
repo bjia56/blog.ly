@@ -44,9 +44,3 @@ describe('create Blog POST handler tests', () => {
         expect(blogID2.payload.uuid).toBe(blogID1.payload.uuid + 1)
     })
 })
-
-afterAll(async (done) => {
-    // close db after completion
-    await db.close()
-    done()
-})

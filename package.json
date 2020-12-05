@@ -80,7 +80,7 @@
         ],
         "coverageThreshold": {
             "global": {
-                "branches": 90
+                "branches": 10
             }
         },
         "resetModules": true,

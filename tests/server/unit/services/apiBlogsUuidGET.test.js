@@ -162,9 +162,3 @@ describe('blog post Uuid GET handler tests', () => {
         expect(data.payload.authorName).toBe('John Doe')
     })
 })
-
-afterAll(async (done) => {
-    // close db after completion
-    await db.close()
-    done()
-})

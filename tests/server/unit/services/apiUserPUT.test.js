@@ -30,9 +30,3 @@ describe('user PUT handler tests', () => {
         expect(data.payload).toBe(null)
     })
 })
-
-afterAll(async (done) => {
-    // close db after completion
-    await db.close()
-    done()
-})

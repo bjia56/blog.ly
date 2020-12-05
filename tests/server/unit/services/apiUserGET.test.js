@@ -161,9 +161,3 @@ describe('user GET handler tests', () => {
         expect(data.payload.notificationPreference).toBe('hourly')
     })
 })
-
-afterAll(async (done) => {
-    // close db after completion
-    await db.close()
-    done()
-})

@@ -42,9 +42,3 @@ afterEach(async (done) => {
     server = null
     done()
 })
-
-afterAll(async (done) => {
-    // close db after completion
-    await db.close()
-    done()
-})

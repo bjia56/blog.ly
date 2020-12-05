@@ -216,9 +216,3 @@ describe('blog posts GET handler tests', () => {
         expect(data.code).toBe(200)
     })
 })
-
-afterAll(async (done) => {
-    // close db after completion
-    await db.close()
-    done()
-})
