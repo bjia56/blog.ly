@@ -10,6 +10,9 @@ const config = {
     OAUTH20_CLIENT_ID: process.env.OAUTH20_CLIENT_ID,
     OAUTH20_CLIENT_SECRET: process.env.OAUTH20_CLIENT_SECRET,
     EXPRESS_SESSION_KEY: process.env.EXPRESS_SESSION_KEY,
+    TWILIO_CLIENT_ID: process.env.TWILIO_CLIENT_ID,
+    TWILIO_CLIENT_SECRET: process.env.TWILIO_CLIENT_SECRET,
+    TWILIO_PHONE_NUMBER: process.env.TWILIO_PHONE_NUMBER,
 }
 config.OPENAPI_YAML = path.join(config.ROOT_DIR, 'api', 'openapi.yaml')
 config.FULL_PATH = `${config.URL_PATH}:${config.URL_PORT}/${config.BASE_VERSION}`
