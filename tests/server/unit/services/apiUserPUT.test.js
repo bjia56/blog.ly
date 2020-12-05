@@ -1,8 +1,8 @@
-import { apiUserPUT } from '../../../services/UserService.js'
+import { apiUserPUT } from '../../../../services/UserService.js'
 import 'regenerator-runtime/runtime'
 
-const dbHelper = require('./dbHelper')
-const db = require('../../../sql')
+const dbHelper = require('../../dbHelper')
+const db = require('../../../../sql')
 
 describe('user PUT handler tests', () => {
     test('update user name', async () => {
@@ -29,6 +29,6 @@ describe('user PUT handler tests', () => {
 
 afterAll(async (done) => {
     // close db after completion
-    db.close()
+    await db.close()
     done()
 })

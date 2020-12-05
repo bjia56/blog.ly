@@ -9,6 +9,7 @@ const config = {
     PROJECT_DIR: __dirname,
     OAUTH20_CLIENT_ID: process.env.OAUTH20_CLIENT_ID,
     OAUTH20_CLIENT_SECRET: process.env.OAUTH20_CLIENT_SECRET,
+    OAUTH20_CALLBACK: '/login/callback',
     EXPRESS_SESSION_KEY: process.env.EXPRESS_SESSION_KEY,
 }
 config.OPENAPI_YAML = path.join(config.ROOT_DIR, 'api', 'openapi.yaml')

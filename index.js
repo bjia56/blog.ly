@@ -13,11 +13,11 @@ const launchServer = async () => {
             config.URL_PORT,
             config.OPENAPI_YAML
         )
+        state.expressServer.setupAll()
         await state.expressServer.launch()
         logger.info('Express server running')
         state.started = true
     } catch (error) {
-        console.log(error)
         logger.error('Express Server failure: ' + error.message)
         await state.expressServer.close()
     }

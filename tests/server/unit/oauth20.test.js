@@ -1,5 +1,5 @@
 const passport = require('passport')
-const oauth20 = require('../../oauth20')
+const oauth20 = require('../../../oauth20')
 
 describe('oauth20 tests', () => {
     test('oauth20 is a passport module', () => {

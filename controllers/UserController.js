@@ -7,7 +7,7 @@
  */
 
 const Controller = require('./Controller')
-const service = require('../services/UserService')
+const service = require('../services').UserService
 const apiUserGET = async (request, response) => {
     await Controller.handleRequest(request, response, service.apiUserGET)
 }

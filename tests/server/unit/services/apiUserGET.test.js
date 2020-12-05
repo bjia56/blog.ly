@@ -1,8 +1,8 @@
-import { apiUserGET } from '../../../services/UserService.js'
+import { apiUserGET } from '../../../../services/UserService.js'
 import 'regenerator-runtime/runtime'
 
-const dbHelper = require('./dbHelper')
-const db = require('../../../sql')
+const dbHelper = require('../../dbHelper')
+const db = require('../../../../sql')
 
 describe('user GET handler tests', () => {
     test('invalid user returns reject error', async () => {
@@ -160,6 +160,6 @@ describe('user GET handler tests', () => {
 
 afterAll(async (done) => {
     // close db after completion
-    db.close()
+    await db.close()
     done()
 })

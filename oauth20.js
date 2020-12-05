@@ -9,7 +9,7 @@ passport.use(
         {
             clientID: config.OAUTH20_CLIENT_ID,
             clientSecret: config.OAUTH20_CLIENT_SECRET,
-            callbackURL: '/login/callback',
+            callbackURL: config.OAUTH20_CALLBACK,
         },
         function (accessToken, refreshToken, profile, cb) {
             var email = profile.emails[0].value

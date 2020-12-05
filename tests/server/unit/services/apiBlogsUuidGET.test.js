@@ -1,8 +1,8 @@
-import { apiBlogsUuidGET } from '../../../services/BlogService.js'
+import { apiBlogsUuidGET } from '../../../../services/BlogService.js'
 import 'regenerator-runtime/runtime'
 
-const dbHelper = require('./dbHelper')
-const db = require('../../../sql')
+const dbHelper = require('../../dbHelper')
+const db = require('../../../../sql')
 
 describe('blog post Uuid GET handler tests', () => {
     test('invalid blog uuid returns reject error', async () => {
@@ -161,6 +161,6 @@ describe('blog post Uuid GET handler tests', () => {
 
 afterAll(async (done) => {
     // close db after completion
-    db.close()
+    await db.close()
     done()
 })

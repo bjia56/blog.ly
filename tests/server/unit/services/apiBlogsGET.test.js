@@ -1,8 +1,11 @@
-import { apiBlogsGET, apiBlogsUuidPUT } from '../../../services/BlogService.js'
+import {
+    apiBlogsGET,
+    apiBlogsUuidPUT,
+} from '../../../../services/BlogService.js'
 import 'regenerator-runtime/runtime'
 
-const dbHelper = require('./dbHelper')
-const db = require('../../../sql')
+const dbHelper = require('../../dbHelper')
+const db = require('../../../../sql')
 
 //helper function to create pause between each entry
 const delay = (ms) => new Promise((res) => setTimeout(res, ms))
@@ -212,6 +215,6 @@ describe('blog posts GET handler tests', () => {
 
 afterAll(async (done) => {
     // close db after completion
-    db.close()
+    await db.close()
     done()
 })

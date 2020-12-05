@@ -1,11 +1,11 @@
 import {
     apiBlogsUuidPUT,
     apiBlogsUuidGET,
-} from '../../../services/BlogService.js'
+} from '../../../../services/BlogService.js'
 import 'regenerator-runtime/runtime'
 
-const dbHelper = require('./dbHelper')
-const db = require('../../../sql')
+const dbHelper = require('../../dbHelper')
+const db = require('../../../../sql')
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms))
 
@@ -413,6 +413,6 @@ describe('blog post Uuid PUT handler tests', () => {
 
 afterAll(async (done) => {
     // close db after completion
-    db.close()
+    await db.close()
     done()
 })

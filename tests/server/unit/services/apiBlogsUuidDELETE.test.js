@@ -1,11 +1,11 @@
 import {
     apiBlogsGET,
     apiBlogsUuidDELETE,
-} from '../../../services/BlogService.js'
+} from '../../../../services/BlogService.js'
 import 'regenerator-runtime/runtime'
 
-const dbHelper = require('./dbHelper')
-const db = require('../../../sql')
+const dbHelper = require('../../dbHelper')
+const db = require('../../../../sql')
 
 describe('blog post Uuid DELETE handler tests', () => {
     test('delete blog when not logged in returns error', async () => {
@@ -120,6 +120,6 @@ describe('blog post Uuid DELETE handler tests', () => {
 
 afterAll(async (done) => {
     // close db after completion
-    db.close()
+    await db.close()
     done()
 })

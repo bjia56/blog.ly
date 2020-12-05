@@ -1,4 +1,4 @@
-const index = require('../../index')
+const index = require('../../../index')
 
 describe('index tests', () => {
     test('index server is started', async () => {
