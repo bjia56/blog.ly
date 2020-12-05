@@ -30,6 +30,10 @@ function constructModel(sequelize, models) {
                 field: 'notificationPreference',
                 allowNull: false,
             },
+            phone: {
+                type: Sequelize.STRING,
+                field: 'phone',
+            },
         },
         { freezeTableName: true, timestamps: false }
     )

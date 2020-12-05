@@ -64,6 +64,7 @@
         "react-router-dom": "^5.2.0",
         "sequelize": "^6.3.5",
         "swagger-ui-express": "^4.1.4",
+        "twilio": "^3.52.0",
         "winston": "^3.3.3"
     },
     "jest": {
