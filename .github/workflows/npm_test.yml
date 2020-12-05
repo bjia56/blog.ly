@@ -52,5 +52,8 @@ jobs:
                   OAUTH20_CLIENT_ID: test
                   OAUTH20_CLIENT_SECRET: test
                   EXPRESS_SESSION_KEY: test
+                  TWILIO_CLIENT_ID: ACtest
+                  TWILIO_CLIENT_SECRET: test
+                  TWILIO_PHONE_NUMBER: '+11234567890'
               run: |
                   npm run test
