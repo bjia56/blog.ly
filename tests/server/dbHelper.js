@@ -4,7 +4,7 @@ import iconv from 'iconv-lite'
 import encodings from 'iconv-lite/encodings'
 iconv.encodings = encodings
 
-const db = require('../../../sql')
+const db = require('../../sql')
 
 // entries must be a list of objects constructed from
 // the database models via Model.build(...)

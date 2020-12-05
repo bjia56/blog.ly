@@ -20,10 +20,14 @@ const apiFollowGET = (_, loggedInUser) =>
     new Promise(async (resolve, reject) => {
         try {
             requireAuthenticated(loggedInUser)
-            var followers = await Follow.findAll({ where: { follower: loggedInUser.uuid } });
-            resolve(Service.successResponse({
-                uuids: followers.map((r) => r.followee)
-            }))
+            var followers = await Follow.findAll({
+                where: { follower: loggedInUser.uuid },
+            })
+            resolve(
+                Service.successResponse({
+                    uuids: followers.map((r) => r.followee),
+                })
+            )
         } catch (e) {
             reject(
                 Service.rejectResponse(

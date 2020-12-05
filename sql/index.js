@@ -6,17 +6,15 @@ const User = require('./User')
 
 const config = require('../config')
 
-var models = null
-
 function initializeModels() {
     var sequelize = new Sequelize(config.DATABASE_STRING, {
         logging: false,
     })
 
     var modelsList = []
-    models = {
-        close: () => {
-            sequelize.close()
+    var models = {
+        close: async () => {
+            await sequelize.close()
         },
         syncAll: async () => {
             for (var i = 1; i <= modelsList.length; i++) {
@@ -34,14 +32,8 @@ function initializeModels() {
         (models.Blog = Blog(sequelize, models)),
         (models.Follow = Follow(sequelize, models)),
     ]
-}
-
-function getModels() {
-    if (models == null) {
-        initializeModels()
-    }
 
     return models
 }
 
-module.exports = getModels()
+module.exports = initializeModels()

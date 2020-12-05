@@ -3,18 +3,26 @@ const logger = require('./logger')
 const ExpressServer = require('./expressServer')
 
 const launchServer = async () => {
+    var state = {
+        started: false,
+        expressServer: null,
+    }
+
     try {
-        this.expressServer = new ExpressServer(
+        state.expressServer = new ExpressServer(
             config.URL_PORT,
             config.OPENAPI_YAML
         )
-        this.expressServer.launch()
+        state.expressServer.setupAll()
+        await state.expressServer.launch()
         logger.info('Express server running')
+        state.started = true
     } catch (error) {
-        console.log(error)
         logger.error('Express Server failure: ' + error.message)
-        await this.close()
+        await state.expressServer.close()
     }
+
+    return state
 }
 
-launchServer().catch((e) => logger.error(e))
+module.exports = launchServer().catch((e) => logger.error(e))

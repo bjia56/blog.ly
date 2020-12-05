@@ -1,10 +1,6 @@
 {
-    "extensions": [
-        "esbenp.prettier-vscode"
-    ],
-    "dockerComposeFile": [
-        "docker-compose.yml"
-    ],
+    "extensions": ["esbenp.prettier-vscode"],
+    "dockerComposeFile": ["docker-compose.yml"],
     "service": "container",
     "workspaceFolder": "/workspace/coms4156",
     "settings": {
