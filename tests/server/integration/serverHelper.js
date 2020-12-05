@@ -9,39 +9,51 @@ const config = require('../../../config')
 const BASE_URL = `http://localhost:${config.URL_PORT}`
 const AUTH_URL = `${BASE_URL}${config.OAUTH20_CALLBACK}`
 
-function buildServerWithMockAuthentication(user) {
-    var mockPassport = new passport.Passport()
-    mockPassport.use(
-        new MockStrategy({
-            user: user,
+// Wraps an ExpressServer and uses a mocked authentication
+// module instead of oauth20
+class TestServer {
+    constructor(user) {
+        var mockPassport = new passport.Passport()
+        mockPassport.use(
+            new MockStrategy({
+                user: user,
+            })
+        )
+
+        mockPassport.serializeUser((user, cb) => {
+            cb(null, JSON.stringify(user))
         })
-    )
 
-    mockPassport.serializeUser((user, cb) => {
-        cb(null, JSON.stringify(user))
-    })
-
-    mockPassport.deserializeUser((user, cb) => {
-        cb(null, JSON.parse(user))
-    })
-
-    var server = new ExpressServer(config.URL_PORT, config.OPENAPI_YAML)
-    server.setupMiddleware()
-    server.app.use(mockPassport.initialize())
-    server.app.use(mockPassport.session())
-    server.app.get(
-        config.OAUTH20_CALLBACK,
-        mockPassport.authenticate('mock', {
-            failureRedirect: '/login/error',
-            successRedirect: '/',
+        mockPassport.deserializeUser((user, cb) => {
+            cb(null, JSON.parse(user))
         })
-    )
-    server.setupAPI()
 
-    return server
+        var server = new ExpressServer(config.URL_PORT, config.OPENAPI_YAML)
+        server.setupMiddleware()
+        server.app.use(mockPassport.initialize())
+        server.app.use(mockPassport.session())
+        server.app.get(
+            config.OAUTH20_CALLBACK,
+            mockPassport.authenticate('mock', {
+                failureRedirect: '/login/error',
+                successRedirect: '/',
+            })
+        )
+        server.setupAPI()
+
+        this.server = server
+    }
+
+    launch() {
+        return this.server.launch()
+    }
+
+    close() {
+        return this.server.close()
+    }
 }
 
-class SessionHTTPClient {
+class TestClient {
     constructor() {
         this.cookie = null
     }
@@ -89,6 +101,6 @@ class SessionHTTPClient {
 }
 
 module.exports = {
-    buildServerWithMockAuthentication,
-    SessionHTTPClient,
+    TestServer,
+    TestClient,
 }

@@ -17,8 +17,8 @@ beforeEach(async (done) => {
     done()
 })
 
-describe('check mock authentication', () => {
-    test('check mock authentication works', async () => {
+describe('blog tests', () => {
+    test('check blog can be fetched when unauthenticated', async () => {
         await populateDatabase([
             db.User.build({
                 uuid: MOCK_UUID,
@@ -26,13 +26,12 @@ describe('check mock authentication', () => {
                 name: 'John Doe',
                 notificationPreference: '',
             }),
+            db.Blog.build({ title: '', author: MOCK_UUID, uuid: 100 }),
         ])
-        var client = new TestClient()
-        await client.authenticate()
 
-        await client.get('/api/user').then((response) => {
+        await new TestClient().get('/api/blogs').then((response) => {
             expect(response.status).toBe(200)
-            expect(response.data.uuid).toBe(MOCK_UUID)
+            expect(response.data).toEqual({ uuids: [100] })
         })
     })
 })
