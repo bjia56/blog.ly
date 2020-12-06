@@ -59,8 +59,6 @@ class Profile extends Component {
                 console.log(users)
                 users[0].then((following) => this.setState({ following }))
                 users[1].then((followers) => this.setState({ followers }))
-
-                // this.setState({ following: users[0], followers: users[1] })
             })
             .catch((e) => {
                 console.log(e)
@@ -107,6 +105,19 @@ class Profile extends Component {
     }
 
     handleSave(field, text) {
+        if (field == 'phone') {
+            const regex = /[\+][\d]{11}/gm
+            if (text.match(regex)) {
+                this.setState({ [field]: text, updated: true })
+                return
+            } else {
+                alert(
+                    `Invalid phone number format. Phone number format must be "+1XXXXXXXXX"`
+                )
+                this.props.history.push('/profile')
+                return
+            }
+        }
         this.setState({ [field]: text, updated: true })
         console.log(field, text)
     }
