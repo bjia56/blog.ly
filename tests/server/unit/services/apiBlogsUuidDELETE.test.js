@@ -80,7 +80,7 @@ describe('blog post Uuid DELETE handler tests', () => {
         ])
 
         var data = await apiBlogsUuidDELETE({ uuid: 100 }, { uuid: 1 })
-        expect(data.payload).toBe(null)
+        expect(data.payload).toBe(undefined)
         expect(data.code).toBe(200)
 
         var data2 = await apiBlogsGET({})
@@ -108,11 +108,11 @@ describe('blog post Uuid DELETE handler tests', () => {
         ])
 
         var data = await apiBlogsUuidDELETE({ uuid: 100 }, { uuid: 1 })
-        expect(data.payload).toBe(null)
+        expect(data.payload).toBe(undefined)
         expect(data.code).toBe(200)
 
         var data2 = await apiBlogsUuidDELETE({ uuid: 101 }, { uuid: 1 })
-        expect(data2.payload).toBe(null)
+        expect(data2.payload).toBe(undefined)
         expect(data2.code).toBe(200)
 
         var data3 = await apiBlogsGET({})

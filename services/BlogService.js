@@ -119,7 +119,7 @@ const apiBlogsUuidDELETE = ({ uuid }, loggedInUser) =>
             }
 
             await blog.destroy()
-            resolve(Service.successResponse(null))
+            resolve(Service.successResponse())
         } catch (e) {
             reject(
                 Service.rejectResponse(
@@ -227,7 +227,7 @@ const apiBlogsUuidPUT = ({ uuid, body }, loggedInUser) =>
 
             await blog.save()
 
-            resolve(Service.successResponse(null))
+            resolve(Service.successResponse())
         } catch (e) {
             reject(
                 Service.rejectResponse(

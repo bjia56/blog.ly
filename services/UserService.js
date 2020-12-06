@@ -115,7 +115,7 @@ const apiUserPUT = ({ body }, loggedInUser) =>
 
             await user.save()
 
-            resolve(Service.successResponse(null))
+            resolve(Service.successResponse())
         } catch (e) {
             reject(
                 Service.rejectResponse(

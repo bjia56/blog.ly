@@ -80,7 +80,7 @@ describe('blog post Uuid PUT handler tests', () => {
         await delay(1000)
         var data0 = await apiBlogsUuidPUT({ uuid: 100, body: {} }, { uuid: 1 })
         expect(data0.code).toBe(200)
-        expect(data0.payload).toBe(null)
+        expect(data0.payload).toBe(undefined)
 
         var data = await apiBlogsUuidGET({ uuid: 100 })
         expect(typeof data.payload).toBe('object')
@@ -144,7 +144,7 @@ describe('blog post Uuid PUT handler tests', () => {
             { uuid: 1 }
         )
         expect(data0.code).toBe(200)
-        expect(data0.payload).toBe(null)
+        expect(data0.payload).toBe(undefined)
 
         var data = await apiBlogsUuidGET({ uuid: 100 })
         expect(typeof data.payload).toBe('object')
@@ -209,7 +209,7 @@ describe('blog post Uuid PUT handler tests', () => {
             { uuid: 1 }
         )
         expect(data0.code).toBe(200)
-        expect(data0.payload).toBe(null)
+        expect(data0.payload).toBe(undefined)
 
         var data = await apiBlogsUuidGET({ uuid: 100 })
         expect(typeof data.payload).toBe('object')
@@ -277,7 +277,7 @@ describe('blog post Uuid PUT handler tests', () => {
             { uuid: 1 }
         )
         expect(data0.code).toBe(200)
-        expect(data0.payload).toBe(null)
+        expect(data0.payload).toBe(undefined)
 
         var data = await apiBlogsUuidGET({ uuid: 100 })
         expect(typeof data.payload).toBe('object')
@@ -345,7 +345,7 @@ describe('blog post Uuid PUT handler tests', () => {
             { uuid: 1 }
         )
         expect(data0.code).toBe(200)
-        expect(data0.payload).toBe(null)
+        expect(data0.payload).toBe(undefined)
 
         var data = await apiBlogsUuidGET({ uuid: 100 })
         expect(typeof data.payload).toBe('object')
@@ -384,7 +384,7 @@ describe('blog post Uuid PUT handler tests', () => {
             { uuid: 1 }
         )
         expect(data1.code).toBe(200)
-        expect(data1.payload).toBe(null)
+        expect(data1.payload).toBe(undefined)
 
         var data2 = await apiBlogsUuidGET({ uuid: 100 })
         expect(typeof data2.payload).toBe('object')

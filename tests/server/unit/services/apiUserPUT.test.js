@@ -27,6 +27,6 @@ describe('user PUT handler tests', () => {
             { uuid: 1 }
         )
         expect(data.code).toBe(200)
-        expect(data.payload).toBe(null)
+        expect(data.payload).toBe(undefined)
     })
 })
