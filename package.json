@@ -83,6 +83,7 @@
                 "branches": 10
             }
         },
+        "globalSetup": "./tests/globalSetup",
         "resetModules": true,
         "testTimeout": 60000
     }

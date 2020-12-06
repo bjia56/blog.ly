@@ -5,6 +5,7 @@ const axios = require('axios')
 
 const ExpressServer = require('../../../expressServer')
 const config = require('../../../config')
+const User = require('../../../sql').User
 
 const BASE_URL = `http://localhost:${config.URL_PORT}`
 const AUTH_URL = `${BASE_URL}${config.OAUTH20_CALLBACK}`
@@ -15,9 +16,19 @@ class TestServer {
     constructor(user) {
         var mockPassport = new passport.Passport()
         mockPassport.use(
-            new MockStrategy({
-                user: user,
-            })
+            new MockStrategy(
+                {
+                    user: user,
+                },
+                function (user, cb) {
+                    User.findOrCreate({
+                        where: { email: user.email },
+                        defaults: user,
+                    }).then((user) => {
+                        cb(null, { uuid: user[0].uuid })
+                    })
+                }
+            )
         )
 
         mockPassport.serializeUser((user, cb) => {
@@ -68,7 +79,8 @@ class TestClient {
     async get(path) {
         var client = axios.create({
             method: 'GET',
-            headers: { common: { Cookie: this.cookie } },
+            headers: { get: { Cookie: this.cookie } },
+            validateStatus: () => true,
         })
         return client(`${BASE_URL}${path}`)
     }
@@ -76,7 +88,8 @@ class TestClient {
     async delete(path) {
         var client = axios.create({
             method: 'DELETE',
-            headers: { common: { Cookie: this.cookie } },
+            headers: { delete: { Cookie: this.cookie } },
+            validateStatus: () => true,
         })
         return client(`${BASE_URL}${path}`)
     }
@@ -84,19 +97,20 @@ class TestClient {
     async post(path, body) {
         var client = axios.create({
             method: 'POST',
-            data: body,
-            headers: { common: { Cookie: this.cookie } },
+            headers: { post: { Cookie: this.cookie } },
+            validateStatus: () => true,
         })
-        return client(`${BASE_URL}${path}`)
+        return client(`${BASE_URL}${path}`, { data: body })
     }
 
     async put(path, body) {
+        console.log(body)
         var client = axios.create({
             method: 'PUT',
-            data: body,
-            headers: { common: { Cookie: this.cookie } },
+            headers: { put: { Cookie: this.cookie } },
+            validateStatus: () => true,
         })
-        return client(`${BASE_URL}${path}`)
+        return client(`${BASE_URL}${path}`, { data: body })
     }
 }
 
