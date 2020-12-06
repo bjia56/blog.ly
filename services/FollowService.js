@@ -1,5 +1,9 @@
 /* eslint-disable no-unused-vars */
 const Service = require('./Service')
+const Database = require('../sql')
+
+const User = Database.User
+const Follow = Database.Follow
 
 function requireAuthenticated(loggedInUser) {
     if (loggedInUser == null || loggedInUser.uuid == null) {
@@ -11,7 +15,8 @@ function requireAuthenticated(loggedInUser) {
 }
 
 /**
- * Get all users the logged-in user is following
+ * Get all users the logged-in user is following and all
+ * users following the logged-in user
  * This can only be done by users who have logged in.
  *
  * returns List
@@ -20,12 +25,16 @@ const apiFollowGET = (_, loggedInUser) =>
     new Promise(async (resolve, reject) => {
         try {
             requireAuthenticated(loggedInUser)
-            var followers = await Follow.findAll({
+            var following = await Follow.findAll({
                 where: { follower: loggedInUser.uuid },
+            })
+            var followers = await Follow.findAll({
+                where: { followee: loggedInUser.uuid },
             })
             resolve(
                 Service.successResponse({
-                    uuids: followers.map((r) => r.followee),
+                    following: following.map((r) => r.followee),
+                    followers: followers.map((r) => r.follower),
                 })
             )
         } catch (e) {
@@ -69,11 +78,7 @@ const apiFollowDELETE = ({ user }, loggedInUser) =>
             }
 
             await followRecord.destroy()
-            resolve(
-                Service.successResponse({
-                    user,
-                })
-            )
+            resolve(Service.successResponse(null))
         } catch (e) {
             reject(
                 Service.rejectResponse(
@@ -96,15 +101,26 @@ const apiFollowPOST = ({ user }, loggedInUser) =>
         try {
             requireAuthenticated(loggedInUser)
 
+            if (user == loggedInUser.uuid) {
+                throw {
+                    message: 'Cannot follow self',
+                    status: 403,
+                }
+            }
+
+            var users = await User.findAll({ where: { uuid: user } })
+            if (users.length == 0) {
+                throw {
+                    message: 'User not found',
+                    status: 404,
+                }
+            }
+
             await Follow.create({
                 follower: loggedInUser.uuid,
                 followee: user,
             })
-            resolve(
-                Service.successResponse({
-                    user,
-                })
-            )
+            resolve(Service.successResponse(null))
         } catch (e) {
             reject(
                 Service.rejectResponse(

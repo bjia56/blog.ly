@@ -249,20 +249,29 @@ paths:
         get:
             tags:
                 - follow
-            summary: Get all users the loged-in user is following
+            summary:
+                Get all users the logged-in user is following and all users
+                following the logged-in user
             description: This can only be done by users who have logged in.
             operationId: apiFollowGET
             x-eov-operation-id: apiFollowGET
             x-eov-operation-handler: controllers/FollowController
             responses:
                 '200':
-                    description: Success. Returns a list of user uuids.
+                    description:
+                        Success. Returns a list of user uuids that the logged-in
+                        user is following, and a list of user uuids that are
+                        following the logged-in user.
                     content:
                         application/json:
                             schema:
                                 type: object
                                 properties:
-                                    uuids:
+                                    followers:
+                                        type: array
+                                        items:
+                                            type: integer
+                                    following:
                                         type: array
                                         items:
                                             type: integer
