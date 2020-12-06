@@ -14,6 +14,7 @@ class Articles extends Component {
         this.state = {
             articles: [],
             following: [],
+            err: false,
         }
     }
 
@@ -31,6 +32,7 @@ class Articles extends Component {
             })
             .catch((e) => {
                 console.log(e)
+                this.setState({ err: true })
             })
     }
 
@@ -53,6 +55,7 @@ class Articles extends Component {
             })
             .catch((e) => {
                 console.log(e)
+                this.setState({ err: true })
             })
     }
 
@@ -67,6 +70,7 @@ class Articles extends Component {
 
     onFollow(user, event) {
         event.preventDefault()
+        this.setState({ err: false })
         console.log('clicked on follow')
         axios
             .post(`/api/follow?user=${user}`)
@@ -75,11 +79,13 @@ class Articles extends Component {
             })
             .catch((e) => {
                 console.log(e)
+                this.setState({ err: true })
             })
     }
 
     onUnfollow(user, event) {
         event.preventDefault()
+        this.setState({ err: false })
         console.log('clicked on unfollow')
         axios
             .delete(`/api/follow?user=${user}`)
@@ -92,6 +98,7 @@ class Articles extends Component {
             })
             .catch((e) => {
                 console.log(e)
+                this.setState({ err: true })
             })
     }
 
@@ -109,6 +116,12 @@ class Articles extends Component {
                 </div>
                 {this.state.articles.length == 0 && (
                     <Alert variant="primary">We got nothing here.</Alert>
+                )}
+                {this.state.err && (
+                    <Alert variant="warning">
+                        {' '}
+                        Oops, something went wrong. Try again later.{' '}
+                    </Alert>
                 )}
                 <ListGroup>
                     {this.state.articles.map((article) => (

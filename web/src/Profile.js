@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Alert from 'react-bootstrap/Alert'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -21,7 +22,7 @@ class Profile extends Component {
             phone: 'Placeholder Phone',
             notificationPreference: 'instant',
             updated: false,
-            err: '',
+            err: false,
             articles: [],
             following: [],
             followers: [],
@@ -35,26 +36,24 @@ class Profile extends Component {
     }
 
     fetchFollowData() {
+        this.setState({ err: false })
+        // TODO fix this
         axios
             .get(`/api/follow`)
-            .then((resp) => {
-                return [
-                    Promise.all(
-                        resp.data.following.map((uuid) =>
-                            axios
-                                .get(`/api/user?user=${uuid}`)
-                                .then((resp) => resp.data)
-                        )
+            .then((resp) =>
+                Promise.all([
+                    ...resp.data.following.map((uuid) =>
+                        axios
+                            .get(`/api/user?user=${uuid}`)
+                            .then((resp) => resp.data)
                     ),
-                    Promise.all(
-                        resp.data.followers.map((uuid) =>
-                            axios
-                                .get(`/api/user?user=${uuid}`)
-                                .then((resp) => resp.data)
-                        )
+                    ...resp.data.followers.map((uuid) =>
+                        axios
+                            .get(`/api/user?user=${uuid}`)
+                            .then((resp) => resp.data)
                     ),
-                ]
-            })
+                ])
+            )
             .then((users) => {
                 console.log(users)
                 users[0].then((following) => this.setState({ following }))
@@ -62,10 +61,12 @@ class Profile extends Component {
             })
             .catch((e) => {
                 console.log(e)
+                this.setState({ err: true })
             })
     }
 
     fetchProfileData() {
+        this.setState({ err: false })
         axios
             .get(`/api/user`)
             .then((resp) => {
@@ -78,12 +79,14 @@ class Profile extends Component {
             })
             .catch((e) => {
                 console.log(e)
+                this.setState({ err: true })
             })
     }
 
     fetchArticleData() {
         const limit = 100
         const author = this.props.uuid
+        this.setState({ err: false })
         axios
             .get(`/api/blogs?limit=${limit}&author=${author}`)
             .then((resp) => {
@@ -101,6 +104,7 @@ class Profile extends Component {
             })
             .catch((e) => {
                 console.log(e)
+                this.setState({ err: true })
             })
     }
 
@@ -130,11 +134,17 @@ class Profile extends Component {
 
     onNewArticle(event) {
         event.preventDefault()
-        axios.post('/api/blogs').then((resp) => {
-            const { uuid } = resp.data
-            console.log('New Post uuid', uuid)
-            this.props.history.push(`/edit/${uuid}`)
-        })
+        this.setState({ err: false })
+        axios
+            .post('/api/blogs')
+            .then((resp) => {
+                const { uuid } = resp.data
+                console.log('New Post uuid', uuid)
+                this.props.history.push(`/edit/${uuid}`)
+            })
+            .catch((e) => {
+                this.setState({ err: true })
+            })
     }
 
     onUserClick(event) {
@@ -189,6 +199,7 @@ class Profile extends Component {
                                 >
                                     {this.state.followers.map((user) => (
                                         <Dropdown.Item
+                                            key={user.uuid}
                                             eventKey={user.uuid}
                                             onClick={this.onUserClick.bind(
                                                 this,
@@ -208,6 +219,7 @@ class Profile extends Component {
                                     {this.state.following.map((user) => (
                                         <Dropdown.Item
                                             eventKey={user.uuid}
+                                            key={user.uuid}
                                             onClick={this.onUserClick.bind(
                                                 this,
                                                 user.uuid
