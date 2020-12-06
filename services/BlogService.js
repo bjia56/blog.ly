@@ -201,6 +201,8 @@ const apiBlogsUuidPUT = ({ uuid, body }, loggedInUser) =>
                 }
             }
 
+            console.log(body)
+
             var blog = blogs[0]
             if (blog.author !== loggedInUser.uuid) {
                 throw {

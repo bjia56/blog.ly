@@ -10,13 +10,8 @@ import 'regenerator-runtime/runtime'
 
 const dbHelper = require('../../dbHelper')
 const db = require('../../../../sql')
-const twilioUtil = require('../../../../util/twilio')
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms))
-
-beforeAll(() => {
-    twilioUtil.setAPIEnabled(false)
-})
 
 describe('blog post Uuid PUT handler tests', () => {
     test('invalid blog uuid returns reject error', async () => {

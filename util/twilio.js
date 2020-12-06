@@ -51,6 +51,7 @@ async function sendNotifications(author) {
 module.exports = {
     sendNotifications,
     setAPIEnabled: (enabled) => {
+        console.log(`Setting Twilio 'apiCallEnabled' to: ${enabled}`)
         apiCallEnabled = enabled
     },
 }
