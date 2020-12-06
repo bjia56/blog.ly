@@ -15,7 +15,7 @@ class User extends Component {
             description: 'Placeholder Description',
             err: '',
             articles: [],
-            following: [],
+            following: false,
         }
     }
 
@@ -29,8 +29,13 @@ class User extends Component {
         axios
             .get(`/api/follow`)
             .then((resp) => {
-                console.log(resp)
-                this.setState({ following: resp.data.uuids })
+                console.log(resp.data.following)
+                let { id } = this.props.match.params
+                if (resp.data.following.includes(parseInt(id))) {
+                    this.setState({ following: true })
+                } else {
+                    this.setState({ following: false })
+                }
             })
             .catch((e) => {
                 console.log(e)
@@ -69,14 +74,30 @@ class User extends Component {
             })
     }
 
-    onFollow(event) {
+    onFollow(user, event) {
         event.preventDefault()
         console.log('clicked on follow')
+        axios
+            .post(`/api/follow?user=${user}`)
+            .then((resp) => {
+                this.setState({ following: true })
+            })
+            .catch((e) => {
+                console.log(e)
+            })
     }
 
-    onUnfollow(event) {
+    onUnfollow(user, event) {
         event.preventDefault()
         console.log('clicked on unfollow')
+        axios
+            .delete(`/api/follow?user=${user}`)
+            .then((resp) => {
+                this.setState({ following: false })
+            })
+            .catch((e) => {
+                console.log(e)
+            })
     }
 
     render() {
@@ -98,19 +119,23 @@ class User extends Component {
                             }}
                         >
                             {this.state.name}
-                            {this.state.following.includes(this.state.uuid) && (
+                            {this.state.following && (
                                 <Button
-                                    onClick={this.onUnfollow.bind(this)}
+                                    onClick={this.onUnfollow.bind(
+                                        this,
+                                        this.state.uuid
+                                    )}
                                     style={{ marginLeft: 'auto' }}
                                 >
                                     Unfollow
                                 </Button>
                             )}
-                            {!this.state.following.includes(
-                                this.state.uuid
-                            ) && (
+                            {!this.state.following && (
                                 <Button
-                                    onClick={this.onFollow.bind(this)}
+                                    onClick={this.onFollow.bind(
+                                        this,
+                                        this.state.uuid
+                                    )}
                                     style={{ marginLeft: 'auto' }}
                                 >
                                     Follow

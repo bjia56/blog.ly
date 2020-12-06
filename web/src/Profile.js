@@ -24,30 +24,43 @@ class Profile extends Component {
             err: '',
             articles: [],
             following: [],
+            followers: [],
         }
     }
 
     componentDidMount() {
         this.fetchProfileData()
         this.fetchArticleData()
-        this.fetchFollowingData()
+        this.fetchFollowData()
     }
 
-    fetchFollowingData() {
+    fetchFollowData() {
         axios
             .get(`/api/follow`)
             .then((resp) => {
-                let uuids = resp.data.uuids || []
-                return Promise.all(
-                    uuids.map((uuid) =>
-                        axios
-                            .get(`/api/user?user=${uuid}`)
-                            .then((resp) => resp.data)
-                    )
-                )
+                return [
+                    Promise.all(
+                        resp.data.following.map((uuid) =>
+                            axios
+                                .get(`/api/user?user=${uuid}`)
+                                .then((resp) => resp.data)
+                        )
+                    ),
+                    Promise.all(
+                        resp.data.followers.map((uuid) =>
+                            axios
+                                .get(`/api/user?user=${uuid}`)
+                                .then((resp) => resp.data)
+                        )
+                    ),
+                ]
             })
             .then((users) => {
-                this.setState({ following: users })
+                console.log(users)
+                users[0].then((following) => this.setState({ following }))
+                users[1].then((followers) => this.setState({ followers }))
+
+                // this.setState({ following: users[0], followers: users[1] })
             })
             .catch((e) => {
                 console.log(e)
@@ -55,17 +68,14 @@ class Profile extends Component {
     }
 
     fetchProfileData() {
-        const uuid = this.props.uuid || 1
         axios
-            .get(`/api/user?user=${uuid}`)
+            .get(`/api/user`)
             .then((resp) => {
                 const data = resp.data
-                console.log(data)
                 if (!data.phone) {
                     data.phone = ''
                 }
                 delete data.uuid
-                console.log(data)
                 this.setState({ updated: false, ...data })
             })
             .catch((e) => {
@@ -124,13 +134,13 @@ class Profile extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.state !== prevState && this.state.updated) {
             this.setState({ updated: false })
-            console.log(this.state)
             const body = {
                 name: this.state.name,
                 description: this.state.description,
                 notificationPreference: this.state.notificationPreference,
                 phone: this.state.phone,
             }
+            console.log(body)
             axios
                 .put(`/api/user`, body)
                 .then((resp) => {
@@ -155,9 +165,48 @@ class Profile extends Component {
                     <Card body border="info" style={{ marginTop: 20 }}>
                         <Card.Header
                             as="h4"
-                            style={{ background: 'transparent' }}
+                            style={{
+                                background: 'transparent',
+                                display: 'flex',
+                            }}
                         >
-                            My Profile
+                            <Col md={4}>My Profile</Col>
+                            <Col md={{ span: 2, offset: 4 }}>
+                                <DropdownButton
+                                    id="dropdown-followers"
+                                    title="Followers"
+                                >
+                                    {this.state.followers.map((user) => (
+                                        <Dropdown.Item
+                                            eventKey={user.uuid}
+                                            onClick={this.onUserClick.bind(
+                                                this,
+                                                user.uuid
+                                            )}
+                                        >
+                                            {user.name}
+                                        </Dropdown.Item>
+                                    ))}
+                                </DropdownButton>
+                            </Col>
+                            <Col md={2}>
+                                <DropdownButton
+                                    id="dropdown-following"
+                                    title="Following"
+                                >
+                                    {this.state.following.map((user) => (
+                                        <Dropdown.Item
+                                            eventKey={user.uuid}
+                                            onClick={this.onUserClick.bind(
+                                                this,
+                                                user.uuid
+                                            )}
+                                        >
+                                            {user.name}
+                                        </Dropdown.Item>
+                                    ))}
+                                </DropdownButton>
+                            </Col>
                         </Card.Header>
                         <Card.Body>
                             <Row className="my-1">
@@ -176,6 +225,12 @@ class Profile extends Component {
                                         )}
                                     />
                                 </Col>
+                            </Row>
+                            <Row className="my-1">
+                                <Col xs={4} className="font-weight-bold">
+                                    Email
+                                </Col>
+                                <Col>{this.state.email}</Col>
                             </Row>
                             <Row className="my-1">
                                 <Col xs={4} className="font-weight-bold">
@@ -233,29 +288,6 @@ class Profile extends Component {
                                         <Dropdown.Item eventKey="daily">
                                             Daily
                                         </Dropdown.Item>
-                                    </DropdownButton>
-                                </Col>
-                            </Row>
-                            <Row className="my-1">
-                                <Col xs={4} className="font-weight-bold">
-                                    Following
-                                </Col>
-                                <Col>
-                                    <DropdownButton
-                                        id="dropdown-following"
-                                        title="Following"
-                                    >
-                                        {this.state.following.map((user) => (
-                                            <Dropdown.Item
-                                                eventKey={user.uuid}
-                                                onClick={this.onUserClick.bind(
-                                                    this,
-                                                    user.uuid
-                                                )}
-                                            >
-                                                {user.name}
-                                            </Dropdown.Item>
-                                        ))}
                                     </DropdownButton>
                                 </Col>
                             </Row>

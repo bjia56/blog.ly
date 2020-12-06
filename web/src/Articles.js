@@ -27,7 +27,7 @@ class Articles extends Component {
             .get(`/api/follow`)
             .then((resp) => {
                 console.log(resp)
-                this.setState({ following: resp.data.uuids })
+                this.setState({ following: resp.data.following })
             })
             .catch((e) => {
                 console.log(e)
@@ -85,8 +85,9 @@ class Articles extends Component {
             .delete(`/api/follow?user=${user}`)
             .then((resp) => {
                 let index = this.state.following.indexOf(user)
+                this.state.following.splice(index, 1)
                 this.setState({
-                    following: this.state.following.splice(index, 1),
+                    following: this.state.following,
                 })
             })
             .catch((e) => {
