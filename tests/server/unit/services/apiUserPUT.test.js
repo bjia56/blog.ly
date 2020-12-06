@@ -1,8 +1,12 @@
-import { apiUserPUT } from '../../../services/UserService.js'
+/**
+ * @jest-environment node
+ */
+
+import { apiUserPUT } from '../../../../services/UserService.js'
 import 'regenerator-runtime/runtime'
 
-const dbHelper = require('./dbHelper')
-const db = require('../../../sql')
+const dbHelper = require('../../dbHelper')
+const db = require('../../../../sql')
 
 describe('user PUT handler tests', () => {
     test('update user name', async () => {
@@ -25,10 +29,4 @@ describe('user PUT handler tests', () => {
         expect(data.code).toBe(200)
         expect(data.payload).toBe(null)
     })
-})
-
-afterAll(async (done) => {
-    // close db after completion
-    db.close()
-    done()
 })

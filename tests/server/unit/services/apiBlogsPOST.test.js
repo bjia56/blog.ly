@@ -1,8 +1,12 @@
-import { apiBlogsPOST } from '../../../services/BlogService.js'
+/**
+ * @jest-environment node
+ */
+
+import { apiBlogsPOST } from '../../../../services/BlogService.js'
 import 'regenerator-runtime/runtime'
 
-const dbHelper = require('./dbHelper')
-const db = require('../../../sql')
+const dbHelper = require('../../dbHelper')
+const db = require('../../../../sql')
 
 describe('create Blog POST handler tests', () => {
     test('create blog returns JSON with an integer uuid', async () => {
@@ -39,10 +43,4 @@ describe('create Blog POST handler tests', () => {
         var blogID2 = await apiBlogsPOST(null, { uuid: 1 })
         expect(blogID2.payload.uuid).toBe(blogID1.payload.uuid + 1)
     })
-})
-
-afterAll(async (done) => {
-    // close db after completion
-    db.close()
-    done()
 })

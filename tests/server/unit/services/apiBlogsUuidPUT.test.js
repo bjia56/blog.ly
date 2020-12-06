@@ -1,13 +1,22 @@
+/**
+ * @jest-environment node
+ */
+
 import {
     apiBlogsUuidPUT,
     apiBlogsUuidGET,
-} from '../../../services/BlogService.js'
+} from '../../../../services/BlogService.js'
 import 'regenerator-runtime/runtime'
 
-const dbHelper = require('./dbHelper')
-const db = require('../../../sql')
+const dbHelper = require('../../dbHelper')
+const db = require('../../../../sql')
+const twilioUtil = require('../../../../util/twilio')
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms))
+
+beforeAll(() => {
+    twilioUtil.setAPIEnabled(false)
+})
 
 describe('blog post Uuid PUT handler tests', () => {
     test('invalid blog uuid returns reject error', async () => {
@@ -409,10 +418,4 @@ describe('blog post Uuid PUT handler tests', () => {
         expect(typeof data2.payload.authorName).toBe('string')
         expect(data2.payload.authorName).toBe('John Doe')
     })
-})
-
-afterAll(async (done) => {
-    // close db after completion
-    db.close()
-    done()
 })

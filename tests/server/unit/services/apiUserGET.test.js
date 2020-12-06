@@ -1,8 +1,12 @@
-import { apiUserGET } from '../../../services/UserService.js'
+/**
+ * @jest-environment node
+ */
+
+import { apiUserGET } from '../../../../services/UserService.js'
 import 'regenerator-runtime/runtime'
 
-const dbHelper = require('./dbHelper')
-const db = require('../../../sql')
+const dbHelper = require('../../dbHelper')
+const db = require('../../../../sql')
 
 describe('user GET handler tests', () => {
     test('invalid user returns reject error', async () => {
@@ -156,10 +160,4 @@ describe('user GET handler tests', () => {
         expect(typeof data.payload.notificationPreference).toBe('string')
         expect(data.payload.notificationPreference).toBe('hourly')
     })
-})
-
-afterAll(async (done) => {
-    // close db after completion
-    db.close()
-    done()
 })
