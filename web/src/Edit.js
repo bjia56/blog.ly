@@ -81,9 +81,17 @@ class Edit extends Component {
         axios
             .get(`/api/blogs/${id}`)
             .then((resp) => {
-                this.setState({ err: false })
-                this.setState({ article: resp.data })
+                axios.get('/api/user').then((user) => {
+                    if (user.data.uuid != resp.data.author) {
+                        alert('You cannot edit this article!')
+                        this.props.history.push('/articles')
+                    } else {
+                        this.setState({ err: false })
+                        this.setState({ article: resp.data })
+                    }
+                })
             })
+
             .catch(() => {
                 this.setState({ err: true })
             })
