@@ -3,6 +3,8 @@ const Database = require('../sql')
 
 const User = Database.User
 
+const phoneRegex = /^\+[1-9]\d{1,14}$/g
+
 function requireAuthenticated(loggedInUser) {
     if (loggedInUser == null || loggedInUser.uuid == null) {
         throw {
@@ -101,7 +103,14 @@ const apiUserPUT = ({ body }, loggedInUser) =>
                 user.notificationPreference = body.notificationPreference
             }
             if (body.phone != null) {
-                user.phone = body.phone
+                if (body.phone.match(phoneRegex) != null) {
+                    user.phone = body.phone
+                } else {
+                    throw {
+                        message: 'Invalid phone number format',
+                        status: 403,
+                    }
+                }
             }
 
             await user.save()
