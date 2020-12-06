@@ -15,7 +15,8 @@ class Login extends Component {
     onLogin(event) {
         event.preventDefault()
         console.log('clicked on login')
-        window.location.href = 'http://localhost:3000/login'
+        let base_url = document.location.origin
+        window.location.href = `${base_url}/login`
     }
 
     componentWillReceiveProps({ isLogin }) {
