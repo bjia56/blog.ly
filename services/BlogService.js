@@ -6,6 +6,7 @@ const twilioUtil = require('../util/twilio')
 
 const Blog = Database.Blog
 const User = Database.User
+const Follow = Database.Follow
 
 function toUnixTime(datetime) {
     return Math.floor(datetime.getTime() / 1000)
