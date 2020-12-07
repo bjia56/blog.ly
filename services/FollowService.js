@@ -25,15 +25,12 @@ const apiFollowGET = (_, loggedInUser) =>
     new Promise(async (resolve, reject) => {
         try {
             requireAuthenticated(loggedInUser)
-
             var following = await Follow.findAll({
                 where: { follower: loggedInUser.uuid },
             })
-
             var followers = await Follow.findAll({
                 where: { followee: loggedInUser.uuid },
             })
-
             resolve(
                 Service.successResponse({
                     following: following.map((r) => r.followee),
@@ -65,7 +62,6 @@ const apiFollowDELETE = ({ user }, loggedInUser) =>
             var followRecords = await Follow.findAll({
                 where: { follower: loggedInUser.uuid, followee: user },
             })
-
             if (followRecords.length == 0) {
                 throw {
                     message: 'Follow record not found',

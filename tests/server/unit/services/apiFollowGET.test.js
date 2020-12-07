@@ -53,5 +53,4 @@ describe('follow posts GET handler tests', () => {
         expect(data.payload.followers.length).toBe(1)
         expect(data.code).toBe(200)
     })
-
 })

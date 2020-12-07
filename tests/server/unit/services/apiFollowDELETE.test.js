@@ -2,7 +2,10 @@
  * @jest-environment node
  */
 
-import { apiFollowDELETE, apiFollowGET } from '../../../../services/FollowService.js'
+import {
+    apiFollowDELETE,
+    apiFollowGET,
+} from '../../../../services/FollowService.js'
 import 'regenerator-runtime/runtime'
 
 const dbHelper = require('../../dbHelper')
@@ -43,7 +46,7 @@ describe('follow DELETE handler tests', () => {
                 name: 'John Smith',
                 notificationPreference: '',
             }),
-            db.Follow.build({ id: 100, follower: 1, followee: 2 })
+            db.Follow.build({ id: 100, follower: 1, followee: 2 }),
         ])
 
         var data0 = await apiFollowGET(null, { uuid: 1 })

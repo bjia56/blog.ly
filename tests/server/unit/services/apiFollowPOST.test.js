@@ -2,7 +2,10 @@
  * @jest-environment node
  */
 
-import { apiFollowPOST, apiFollowGET } from '../../../../services/FollowService.js'
+import {
+    apiFollowPOST,
+    apiFollowGET,
+} from '../../../../services/FollowService.js'
 import 'regenerator-runtime/runtime'
 
 const dbHelper = require('../../dbHelper')
@@ -10,7 +13,7 @@ const db = require('../../../../sql')
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms))
 
-describe('follow POST handler tests', () => { 
+describe('follow POST handler tests', () => {
     test('create follow record when not logged in returns error', async () => {
         await dbHelper.populateDatabase([])
 
@@ -27,7 +30,7 @@ describe('follow POST handler tests', () => {
                 email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
-            })
+            }),
         ])
 
         await expect(apiFollowPOST({ user: 1 }, { uuid: 1 })).rejects.toEqual({
@@ -43,7 +46,7 @@ describe('follow POST handler tests', () => {
                 email: 'jdoe@example.com',
                 name: 'John Doe',
                 notificationPreference: '',
-            })
+            }),
         ])
 
         await expect(apiFollowPOST({ user: 2 }, { uuid: 1 })).rejects.toEqual({
@@ -65,7 +68,7 @@ describe('follow POST handler tests', () => {
                 email: 'jsmith@example.com',
                 name: 'John Smith',
                 notificationPreference: '',
-            })
+            }),
         ])
 
         await expect(apiFollowPOST({ user: 2 }, { uuid: 1 }))
@@ -80,5 +83,4 @@ describe('follow POST handler tests', () => {
         expect(data.payload.followers.length).toBe(0)
         expect(data.code).toBe(200)
     })
-
 })
