@@ -3,6 +3,7 @@ import MDEditor from '@uiw/react-md-editor'
 import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import Card from 'react-bootstrap/Card'
 import Alert from 'react-bootstrap/Alert'
 
 import axios from 'axios'
@@ -70,14 +71,27 @@ class Edit extends Component {
             })
     }
 
+    onCancel(event) {
+        event.preventDefault()
+        this.props.history.push('/articles')
+    }
+
     fetchData() {
         let { id } = this.props.match.params
         axios
             .get(`/api/blogs/${id}`)
             .then((resp) => {
-                this.setState({ err: false })
-                this.setState({ article: resp.data })
+                axios.get('/api/user').then((user) => {
+                    if (user.data.uuid != resp.data.author) {
+                        alert('You cannot edit this article!')
+                        this.props.history.push('/articles')
+                    } else {
+                        this.setState({ err: false })
+                        this.setState({ article: resp.data })
+                    }
+                })
             })
+
             .catch(() => {
                 this.setState({ err: true })
             })
@@ -86,31 +100,40 @@ class Edit extends Component {
     render() {
         return (
             <Container style={{ marginTop: 20 }}>
-                <Form>
-                    {this.state.err && (
-                        <Alert variant="warning">
-                            {' '}
-                            Oops, something went wrong. Try again later.{' '}
-                        </Alert>
-                    )}
+                <Card body border="info" style={{ marginTop: 20 }}>
+                    <Card.Header
+                        as="h4"
+                        className="mb-3"
+                        style={{ background: 'transparent' }}
+                    >
+                        Create/Edit Article
+                    </Card.Header>
+                    <Form>
+                        {this.state.err && (
+                            <Alert variant="warning">
+                                {' '}
+                                Oops, something went wrong. Try again later.{' '}
+                            </Alert>
+                        )}
 
-                    <Form.Group controlId="formTitle">
-                        <Form.Label>Title</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Enter your title"
-                            value={this.state.article.title}
-                            onChange={this.onTitleChange.bind(this)}
-                        />
-                    </Form.Group>
+                        <Form.Group controlId="formTitle">
+                            <Form.Label as="h5">Title</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter your title"
+                                value={this.state.article.title}
+                                onChange={this.onTitleChange.bind(this)}
+                            />
+                        </Form.Group>
 
-                    <Form.Group controlId="formContents">
-                        <Form.Label>Contents</Form.Label>
-                        <MDEditor
-                            value={this.state.article.contents}
-                            onChange={this.onContentChange.bind(this)}
-                        ></MDEditor>
-                    </Form.Group>
+                        <Form.Group controlId="formContents">
+                            <Form.Label as="h5">Contents</Form.Label>
+                            <MDEditor
+                                value={this.state.article.contents}
+                                onChange={this.onContentChange.bind(this)}
+                            ></MDEditor>
+                        </Form.Group>
+                    </Form>
                     <Button
                         variant="primary"
                         type="submit"
@@ -127,7 +150,15 @@ class Edit extends Component {
                     >
                         Delete
                     </Button>
-                </Form>
+                    <Button
+                        variant="warning"
+                        type="submit"
+                        onClick={this.onCancel.bind(this)}
+                        style={{ margin: 5 }}
+                    >
+                        Cancel
+                    </Button>
+                </Card>
             </Container>
         )
     }
