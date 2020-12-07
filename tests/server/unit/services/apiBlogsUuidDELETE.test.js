@@ -21,6 +21,31 @@ describe('blog post Uuid DELETE handler tests', () => {
         })
     })
 
+    test("delete another user's blog returns error", async () => {
+        await dbHelper.populateDatabase([
+            db.User.build({
+                uuid: 1,
+                email: 'jdoe@example.com',
+                name: 'John Doe',
+                notificationPreference: '',
+            }),
+            db.User.build({
+                uuid: 2,
+                email: 'jsmith@example.com',
+                name: 'John Smith',
+                notificationPreference: '',
+            }),
+            db.Blog.build({ title: '', author: 1, uuid: 100 }),
+        ])
+
+        await expect(
+            apiBlogsUuidDELETE({ uuid: 100 }, { uuid: 2 })
+        ).rejects.toEqual({
+            code: 403,
+            error: 'Unauthorized',
+        })
+    })
+
     test('delete blog when there are no blogs returns reject error', async () => {
         await dbHelper.populateDatabase([])
 

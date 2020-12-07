@@ -215,4 +215,13 @@ describe('blog posts GET handler tests', () => {
         expect(data.payload.uuids.length).toBe(0)
         expect(data.code).toBe(200)
     })
+
+    test('get blogs database error', async () => {
+        await db.dropAll()
+
+        await expect(apiBlogsGET({ author: 3 })).rejects.toHaveProperty(
+            'code',
+            405
+        )
+    })
 })

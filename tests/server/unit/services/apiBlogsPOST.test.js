@@ -43,4 +43,13 @@ describe('create Blog POST handler tests', () => {
         var blogID2 = await apiBlogsPOST(null, { uuid: 1 })
         expect(blogID2.payload.uuid).toBe(blogID1.payload.uuid + 1)
     })
+
+    test('post blogs database error', async () => {
+        await db.dropAll()
+
+        await expect(apiBlogsPOST(null, { uuid: 1 })).rejects.toHaveProperty(
+            'code',
+            405
+        )
+    })
 })
