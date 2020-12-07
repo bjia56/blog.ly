@@ -1,7 +1,3 @@
-const fs = require('fs')
-const path = require('path')
-const config = require('../config')
-
 class Controller {
     static sendResponse(response, payload) {
         response.status(payload.code)
