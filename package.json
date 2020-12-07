@@ -85,6 +85,7 @@
         },
         "globalSetup": "./tests/globalSetup",
         "resetModules": true,
+        "slowTestThreshold": 30,
         "testTimeout": 60000
     }
 }

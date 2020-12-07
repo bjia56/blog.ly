@@ -25,6 +25,11 @@ function initializeModels() {
                 await modelsList[i].sync()
             }
         },
+        dropAll: async () => {
+            for (var i = 1; i <= modelsList.length; i++) {
+                await modelsList[modelsList.length - i].drop()
+            }
+        },
     }
 
     modelsList = [

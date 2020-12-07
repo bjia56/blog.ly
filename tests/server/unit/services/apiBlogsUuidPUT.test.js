@@ -42,6 +42,31 @@ describe('blog post Uuid PUT handler tests', () => {
     })
 
     test('put blog without logging in returns reject error', async () => {
+        await dbHelper.populateDatabase([
+            db.User.build({
+                uuid: 1,
+                email: 'jdoe@example.com',
+                name: 'John Doe',
+                notificationPreference: '',
+            }),
+            db.User.build({
+                uuid: 2,
+                email: 'jsmith@example.com',
+                name: 'John Smith',
+                notificationPreference: '',
+            }),
+            db.Blog.build({ title: '', author: 1, uuid: 100 }),
+        ])
+
+        await expect(
+            apiBlogsUuidPUT({ uuid: 100, body: {} }, { uuid: 2 })
+        ).rejects.toEqual({
+            code: 403,
+            error: 'Unauthorized',
+        })
+    })
+
+    test("put another user's blog returns reject error", async () => {
         await dbHelper.populateDatabase([])
 
         await expect(apiBlogsUuidPUT({})).rejects.toEqual({
@@ -80,7 +105,7 @@ describe('blog post Uuid PUT handler tests', () => {
         await delay(1000)
         var data0 = await apiBlogsUuidPUT({ uuid: 100, body: {} }, { uuid: 1 })
         expect(data0.code).toBe(200)
-        expect(data0.payload).toBe(null)
+        expect(data0.payload).toBe(undefined)
 
         var data = await apiBlogsUuidGET({ uuid: 100 })
         expect(typeof data.payload).toBe('object')
@@ -144,7 +169,7 @@ describe('blog post Uuid PUT handler tests', () => {
             { uuid: 1 }
         )
         expect(data0.code).toBe(200)
-        expect(data0.payload).toBe(null)
+        expect(data0.payload).toBe(undefined)
 
         var data = await apiBlogsUuidGET({ uuid: 100 })
         expect(typeof data.payload).toBe('object')
@@ -209,7 +234,7 @@ describe('blog post Uuid PUT handler tests', () => {
             { uuid: 1 }
         )
         expect(data0.code).toBe(200)
-        expect(data0.payload).toBe(null)
+        expect(data0.payload).toBe(undefined)
 
         var data = await apiBlogsUuidGET({ uuid: 100 })
         expect(typeof data.payload).toBe('object')
@@ -277,7 +302,7 @@ describe('blog post Uuid PUT handler tests', () => {
             { uuid: 1 }
         )
         expect(data0.code).toBe(200)
-        expect(data0.payload).toBe(null)
+        expect(data0.payload).toBe(undefined)
 
         var data = await apiBlogsUuidGET({ uuid: 100 })
         expect(typeof data.payload).toBe('object')
@@ -345,7 +370,7 @@ describe('blog post Uuid PUT handler tests', () => {
             { uuid: 1 }
         )
         expect(data0.code).toBe(200)
-        expect(data0.payload).toBe(null)
+        expect(data0.payload).toBe(undefined)
 
         var data = await apiBlogsUuidGET({ uuid: 100 })
         expect(typeof data.payload).toBe('object')
@@ -384,7 +409,7 @@ describe('blog post Uuid PUT handler tests', () => {
             { uuid: 1 }
         )
         expect(data1.code).toBe(200)
-        expect(data1.payload).toBe(null)
+        expect(data1.payload).toBe(undefined)
 
         var data2 = await apiBlogsUuidGET({ uuid: 100 })
         expect(typeof data2.payload).toBe('object')

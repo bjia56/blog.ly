@@ -77,7 +77,6 @@ class ExpressServer {
             OpenApiValidator.middleware({
                 apiSpec: this.openApiPath,
                 operationHandlers: path.join(__dirname),
-                fileUploader: { dest: config.FILE_UPLOAD_PATH },
                 validateResponses: true,
             })
         )
