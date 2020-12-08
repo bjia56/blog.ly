@@ -160,4 +160,52 @@ describe('user GET handler tests', () => {
         expect(typeof data.payload.notificationPreference).toBe('string')
         expect(data.payload.notificationPreference).toBe('hourly')
     })
+
+    test('phone returned when querying for self', async () => {
+        await dbHelper.populateDatabase([
+            db.User.build({
+                uuid: 1,
+                email: 'jdoe@example.com',
+                name: 'John Doe',
+                notificationPreference: 'hourly',
+                phone: '+11234567890',
+            }),
+        ])
+
+        var data = await apiUserGET({}, { uuid: 1 })
+        expect(data.code).toBe(200)
+        expect(data.payload).toHaveProperty('phone', '+11234567890')
+    })
+
+    test('phone does not return when querying for user, not logged in', async () => {
+        await dbHelper.populateDatabase([
+            db.User.build({
+                uuid: 1,
+                email: 'jdoe@example.com',
+                name: 'John Doe',
+                notificationPreference: 'hourly',
+                phone: '+11234567890',
+            }),
+        ])
+
+        var data = await apiUserGET({ user: 1 })
+        expect(data.code).toBe(200)
+        expect(data.payload).not.toHaveProperty('phone')
+    })
+
+    test('phone does not return when querying for user, logged in', async () => {
+        await dbHelper.populateDatabase([
+            db.User.build({
+                uuid: 1,
+                email: 'jdoe@example.com',
+                name: 'John Doe',
+                notificationPreference: 'hourly',
+                phone: '+11234567890',
+            }),
+        ])
+
+        var data = await apiUserGET({ user: 1 }, { uuid: 1 })
+        expect(data.code).toBe(200)
+        expect(data.payload).not.toHaveProperty('phone')
+    })
 })

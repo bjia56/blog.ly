@@ -61,8 +61,8 @@ describe('blog post Uuid DELETE handler tests', () => {
         await dbHelper.populateDatabase([])
 
         await expect(apiBlogsUuidDELETE({}, { uuid: 1 })).rejects.toEqual({
-            code: 405,
-            error: 'WHERE parameter "uuid" has invalid "undefined" value',
+            code: 500,
+            error: 'Internal server error',
         })
     })
 

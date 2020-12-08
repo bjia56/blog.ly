@@ -47,9 +47,9 @@ describe('create Blog POST handler tests', () => {
     test('post blogs database error', async () => {
         await db.dropAll()
 
-        await expect(apiBlogsPOST(null, { uuid: 1 })).rejects.toHaveProperty(
-            'code',
-            405
-        )
+        await expect(apiBlogsPOST(null, { uuid: 1 })).rejects.toEqual({
+            code: 500,
+            error: 'Internal server error',
+        })
     })
 })

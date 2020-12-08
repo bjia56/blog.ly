@@ -47,8 +47,8 @@ describe('blog post Uuid GET handler tests', () => {
         await dbHelper.populateDatabase([])
 
         await expect(apiBlogsUuidGET({})).rejects.toEqual({
-            code: 405,
-            error: 'WHERE parameter "uuid" has invalid "undefined" value',
+            code: 500,
+            error: 'Internal server error',
         })
     })
 

@@ -1,3 +1,5 @@
+const logger = require('../logger')
+
 class Controller {
     static sendResponse(response, payload) {
         response.status(payload.code)
@@ -44,7 +46,7 @@ class Controller {
             )
             Controller.sendResponse(response, serviceResponse)
         } catch (error) {
-            console.log(error)
+            logger.warn(error)
             Controller.sendError(response, error)
         }
     }
