@@ -6,8 +6,8 @@
     "scripts": {
         "server": "node index.js",
         "build": "webpack --mode production",
-        "test": "jest --runInBand",
-        "createDB": "node scripts/createDB.js"
+        "test": "jest --runInBand --forceExit",
+        "createDB": "node scripts/createDB"
     },
     "repository": {
         "type": "git",
@@ -83,7 +83,6 @@
                 "branches": 10
             }
         },
-        "globalSetup": "./tests/globalSetup",
         "resetModules": true,
         "slowTestThreshold": 30,
         "testTimeout": 60000

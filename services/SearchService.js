@@ -11,22 +11,11 @@ const Service = require('./Service')
  * */
 const apiSearchGET = ({ keyword, cursor, limit }) =>
     new Promise(async (resolve, reject) => {
-        try {
-            resolve(
-                Service.successResponse({
-                    keyword,
-                    cursor,
-                    limit,
-                })
-            )
-        } catch (e) {
-            reject(
-                Service.rejectResponse(
-                    e.message || 'Invalid input',
-                    e.status || 405
-                )
-            )
-        }
+        // try {
+        resolve(Service.successResponse())
+        // } catch (e) {
+        //    reject(Service.rejectResponse(e))
+        //}
     })
 
 module.exports = {

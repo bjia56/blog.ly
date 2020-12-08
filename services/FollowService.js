@@ -38,12 +38,7 @@ const apiFollowGET = (_, loggedInUser) =>
                 })
             )
         } catch (e) {
-            reject(
-                Service.rejectResponse(
-                    e.message || 'Invalid input',
-                    e.status || 405
-                )
-            )
+            reject(Service.rejectResponse(e))
         }
     })
 
@@ -70,22 +65,10 @@ const apiFollowDELETE = ({ user }, loggedInUser) =>
             }
 
             var followRecord = followRecords[0]
-            if (followRecord.follower !== loggedInUser.uuid) {
-                throw {
-                    message: 'Unauthorized',
-                    status: 403,
-                }
-            }
-
             await followRecord.destroy()
             resolve(Service.successResponse(null))
         } catch (e) {
-            reject(
-                Service.rejectResponse(
-                    e.message || 'Invalid input',
-                    e.status || 405
-                )
-            )
+            reject(Service.rejectResponse(e))
         }
     })
 
@@ -122,12 +105,7 @@ const apiFollowPOST = ({ user }, loggedInUser) =>
             })
             resolve(Service.successResponse(null))
         } catch (e) {
-            reject(
-                Service.rejectResponse(
-                    e.message || 'Invalid input',
-                    e.status || 405
-                )
-            )
+            reject(Service.rejectResponse(e))
         }
     })
 

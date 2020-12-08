@@ -77,27 +77,24 @@ describe('blog posts GET handler tests', () => {
     })
 
     test('get all blogs in descending order based on updated returns a list of ids', async () => {
-        await dbHelper.populateDatabase(
-            [
-                db.User.build({
-                    uuid: 1,
-                    email: 'jdoe@example.com',
-                    name: 'John Doe',
-                    notificationPreference: '',
-                }),
-                db.User.build({
-                    uuid: 2,
-                    email: 'jsmith@example.com',
-                    name: 'John Smith',
-                    notificationPreference: '',
-                }),
-                db.Blog.build({ title: '', author: 1, uuid: 100 }),
-                db.Blog.build({ title: '', author: 2, uuid: 200 }),
-                db.Blog.build({ title: '', author: 1, uuid: 101 }),
-                db.Blog.build({ title: '', author: 1, uuid: 300 }),
-            ],
-            true
-        )
+        await dbHelper.populateDatabase([
+            db.User.build({
+                uuid: 1,
+                email: 'jdoe@example.com',
+                name: 'John Doe',
+                notificationPreference: '',
+            }),
+            db.User.build({
+                uuid: 2,
+                email: 'jsmith@example.com',
+                name: 'John Smith',
+                notificationPreference: '',
+            }),
+            db.Blog.build({ title: '', author: 1, uuid: 100 }),
+            db.Blog.build({ title: '', author: 2, uuid: 200 }),
+            db.Blog.build({ title: '', author: 1, uuid: 101 }),
+            db.Blog.build({ title: '', author: 1, uuid: 300 }),
+        ])
         await delay(1000)
         await apiBlogsUuidPUT(
             { uuid: 100, body: { title: '100' } },
@@ -219,9 +216,9 @@ describe('blog posts GET handler tests', () => {
     test('get blogs database error', async () => {
         await db.dropAll()
 
-        await expect(apiBlogsGET({ author: 3 })).rejects.toHaveProperty(
-            'code',
-            405
-        )
+        await expect(apiBlogsGET({ author: 3 })).rejects.toEqual({
+            code: 500,
+            error: 'Internal server error',
+        })
     })
 })

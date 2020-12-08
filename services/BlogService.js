@@ -2,11 +2,10 @@ var MarkdownIt = require('markdown-it')()
 
 const Service = require('./Service')
 const Database = require('../sql')
-const twilioUtil = require('../util/twilio')
+const { sendNotifications } = require('../util/twilio')
 
 const Blog = Database.Blog
 const User = Database.User
-const Follow = Database.Follow
 
 function toUnixTime(datetime) {
     return Math.floor(datetime.getTime() / 1000)
@@ -48,12 +47,7 @@ const apiBlogsGET = ({ author, cursor, limit }) =>
                 })
             )
         } catch (e) {
-            reject(
-                Service.rejectResponse(
-                    e.message || 'Invalid input',
-                    e.status || 405
-                )
-            )
+            reject(Service.rejectResponse(e))
         }
     })
 
@@ -82,12 +76,7 @@ const apiBlogsPOST = (_, loggedInUser) =>
                 )
             )
         } catch (e) {
-            reject(
-                Service.rejectResponse(
-                    e.message || 'Invalid input',
-                    e.status || 405
-                )
-            )
+            reject(Service.rejectResponse(e))
         }
     })
 
@@ -122,12 +111,7 @@ const apiBlogsUuidDELETE = ({ uuid }, loggedInUser) =>
             await blog.destroy()
             resolve(Service.successResponse())
         } catch (e) {
-            reject(
-                Service.rejectResponse(
-                    e.message || 'Invalid input',
-                    e.status || 405
-                )
-            )
+            reject(Service.rejectResponse(e))
         }
     })
 
@@ -172,12 +156,7 @@ const apiBlogsUuidGET = ({ uuid }) =>
                 })
             )
         } catch (e) {
-            reject(
-                Service.rejectResponse(
-                    e.message || 'Invalid input',
-                    e.status || 405
-                )
-            )
+            reject(Service.rejectResponse(e))
         }
     })
 
@@ -223,19 +202,14 @@ const apiBlogsUuidPUT = ({ uuid, body }, loggedInUser) =>
                     limit: 1,
                 })
                 console.log('Author Results:' + JSON.stringify(author))
-                twilioUtil.sendNotifications(author[0])
+                sendNotifications(author[0])
             }
 
             await blog.save()
 
             resolve(Service.successResponse())
         } catch (e) {
-            reject(
-                Service.rejectResponse(
-                    e.message || 'Invalid input',
-                    e.status || 405
-                )
-            )
+            reject(Service.rejectResponse(e))
         }
     })
 

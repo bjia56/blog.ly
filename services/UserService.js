@@ -61,12 +61,7 @@ const apiUserGET = ({ user }, loggedInUser) =>
 
             resolve(Service.successResponse(response))
         } catch (e) {
-            reject(
-                Service.rejectResponse(
-                    e.message || 'Invalid input',
-                    e.status || 405
-                )
-            )
+            reject(Service.rejectResponse(e))
         }
     })
 /**
@@ -84,12 +79,6 @@ const apiUserPUT = ({ body }, loggedInUser) =>
             var users = await User.findAll({
                 where: { uuid: loggedInUser.uuid },
             })
-            if (users.length == 0) {
-                throw {
-                    message: 'User not found',
-                    status: 404,
-                }
-            }
 
             var user = users[0]
 
@@ -117,12 +106,7 @@ const apiUserPUT = ({ body }, loggedInUser) =>
 
             resolve(Service.successResponse())
         } catch (e) {
-            reject(
-                Service.rejectResponse(
-                    e.message || 'Invalid input',
-                    e.status || 405
-                )
-            )
+            reject(Service.rejectResponse(e))
         }
     })
 
