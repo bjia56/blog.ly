@@ -55,7 +55,7 @@ describe('follow POST handler tests', () => {
         })
     })
 
-    test('create follow record when not logged in returns error', async () => {
+    test('create follow record with valid uuids', async () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
