@@ -52,4 +52,13 @@ describe('create Blog POST handler tests', () => {
             error: 'Internal server error',
         })
     })
+
+    test('post blogs rejects if unauthenticated', async () => {
+        await db.dropAll()
+
+        await expect(apiBlogsPOST(null)).rejects.toEqual({
+            code: 401,
+            error: 'Unauthorized',
+        })
+    })
 })

@@ -35,6 +35,22 @@ describe('invalid input tests', () => {
             expect(response.status).toBe(404)
         })
     })
+
+    test('invalid GET /api/blogs limit 101', async () => {
+        var client = new TestClient()
+
+        await client.get('/api/blogs?query=101').then((response) => {
+            expect(response.status).toBe(400)
+        })
+    })
+
+    test('invalid GET /api/blogs limit 0', async () => {
+        var client = new TestClient()
+
+        await client.get('/api/blogs?query=0').then((response) => {
+            expect(response.status).toBe(400)
+        })
+    })
 })
 
 afterEach(async (done) => {
