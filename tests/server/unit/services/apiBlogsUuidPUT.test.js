@@ -41,7 +41,7 @@ describe('blog post Uuid PUT handler tests', () => {
         })
     })
 
-    test('put blog without logging in returns reject error', async () => {
+    test("put another user's blog returns reject error", async () => {
         await dbHelper.populateDatabase([
             db.User.build({
                 uuid: 1,
@@ -66,7 +66,7 @@ describe('blog post Uuid PUT handler tests', () => {
         })
     })
 
-    test("put another user's blog returns reject error", async () => {
+    test('put blog without logging in returns reject error', async () => {
         await dbHelper.populateDatabase([])
 
         await expect(apiBlogsUuidPUT({})).rejects.toEqual({

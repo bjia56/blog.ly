@@ -132,4 +132,19 @@ describe('user PUT handler tests', () => {
             code: 403,
         })
     })
+
+    test('user not logged in should return error', async () => {
+        await dbHelper.populateDatabase([
+            db.User.build({
+                uuid: 1,
+                email: 'jdoe@example.com',
+                name: 'John Doe',
+                notificationPreference: 'hourly',
+            }),
+        ])
+
+        await expect(
+            apiUserPUT({ body: { name: 'John J Doe' } })
+        ).rejects.toEqual({ code: 401, error: 'Unauthorized' })
+    })
 })
