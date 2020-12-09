@@ -5,15 +5,14 @@ import {
     render,
     screen,
     fireEvent,
-    wait,
 } from '@testing-library/react'
-import Articles from '../../web/src/Articles'
+import User from '../../web/src/User'
 import { HashRouter as Router } from 'react-router-dom'
 
 const sleep = (m) => new Promise((r) => setTimeout(r, m))
 
 const config = require('../../config')
-const { mock, reset } = require('./mock.server')
+const { mock } = require('./mock.server')
 
 beforeAll(async (done) => {
     done()
@@ -21,7 +20,15 @@ beforeAll(async (done) => {
 
 afterEach(cleanup)
 
-it('Articles-success', async () => {
+const props = {
+    match: {
+        params: {
+            id: 2,
+        },
+    },
+}
+
+it('fetchProfileData-following-success', async () => {
     mock.reset()
     mock.onGet('/api/user?user=2')
         .reply(200, {
@@ -69,7 +76,7 @@ it('Articles-success', async () => {
         })
     render(
         <Router>
-            <Articles />
+            <User {...props} />
         </Router>
     )
     await waitFor(() => screen.getAllByRole('heading'))
@@ -77,7 +84,7 @@ it('Articles-success', async () => {
     expect(screen.getAllByText(/Test User 1/g)).toBeTruthy()
 })
 
-it('fetchFollowingData-failure', async () => {
+it('fetchProfileData-not-following-success', async () => {
     mock.reset()
     mock.onGet('/api/user?user=2')
         .reply(200, {
@@ -119,19 +126,21 @@ it('fetchFollowingData-failure', async () => {
             uuids: [1],
         })
         .onGet('/api/follow')
-        .reply(404)
-    mock.reset()
+        .reply(200, {
+            following: [],
+            followers: [3],
+        })
     render(
         <Router>
-            <Articles />
+            <User {...props} />
         </Router>
     )
     await waitFor(() => screen.getAllByRole('heading'))
     await sleep(3000)
-    expect(screen.getAllByText(/Oops/g)).toBeTruthy()
+    expect(screen.getAllByText(/Test User 1/g)).toBeTruthy()
 })
 
-it('fetchData-failure', async () => {
+it('fetchProfileData-failure', async () => {
     mock.reset()
     mock.onGet('/api/user?user=2')
         .reply(200, {
@@ -143,6 +152,63 @@ it('fetchData-failure', async () => {
         })
         .onGet('/api/user?user=3')
         .reply(200, {
+            uuid: 3,
+            email: 'user3@example.com',
+            name: 'Test User 3',
+            description: 'asdf',
+            notificationPreference: 'asdf',
+        })
+        .onGet('/api/user')
+        .reply(404, {
+            uuid: 1,
+            email: 'user1@example.com',
+            name: 'Test User 1',
+            description: 'asdf',
+            notificationPreference: 'asdf',
+        })
+        .onGet('/api/blogs/1')
+        .reply(200, {
+            uuid: 1,
+            title: 'title1',
+            contents: 'contents1',
+            rendered: 'contents',
+            created: 0,
+            updated: 0,
+            author: 1,
+            authorName: 'Test User 1',
+        })
+        .onGet(/\/api\/blogs\?.*/)
+        .reply(200, {
+            uuids: [1],
+        })
+        .onGet('/api/follow')
+        .reply(200, {
+            following: [2],
+            followers: [3],
+        })
+    mock.reset()
+    render(
+        <Router>
+            <User {...props} />
+        </Router>
+    )
+    await waitFor(() => screen.getAllByRole('heading'))
+    await sleep(3000)
+    expect(screen.getAllByText(/Oops/g)).toBeTruthy()
+})
+
+it('fetchFollowData-failure', async () => {
+    mock.reset()
+    mock.onGet('/api/user?user=2')
+        .reply(200, {
+            uuid: 2,
+            email: 'user2@example.com',
+            name: 'Test User 2',
+            description: 'asdf',
+            notificationPreference: 'asdf',
+        })
+        .onGet('/api/user?user=3')
+        .reply(404, {
             uuid: 3,
             email: 'user3@example.com',
             name: 'Test User 3',
@@ -169,15 +235,17 @@ it('fetchData-failure', async () => {
             authorName: 'Test User 1',
         })
         .onGet(/\/api\/blogs\?.*/)
-        .reply(404)
-        .onGet('/api/follow')
         .reply(200, {
+            uuids: [1],
+        })
+        .onGet('/api/follow')
+        .reply(404, {
             following: [2],
             followers: [3],
         })
     render(
         <Router>
-            <Articles />
+            <User {...props} />
         </Router>
     )
     await waitFor(() => screen.getAllByRole('heading'))
@@ -231,33 +299,12 @@ it('fetchArticleData-failure', async () => {
         })
     render(
         <Router>
-            <Articles />
+            <User {...props} />
         </Router>
     )
     await waitFor(() => screen.getAllByRole('heading'))
     await sleep(3000)
     expect(screen.queryByText(/Oops/g)).toBeTruthy()
-})
-
-it('newArticle', async () => {
-    reset()
-
-    const counter = { clicked: false }
-    const mockPush = jest.fn((route) => {
-        if (route == '/edit/4') {
-            counter.clicked = true
-        }
-    })
-
-    render(
-        <Router>
-            <Articles history={{ push: mockPush }} />
-        </Router>
-    )
-
-    await waitFor(() => screen.queryAllByText(/New/))
-    fireEvent.click(screen.getByText(/New/))
-    await waitFor(() => counter.clicked)
 })
 
 it('onFollow', async () => {
@@ -312,7 +359,7 @@ it('onFollow', async () => {
 
     render(
         <Router>
-            <Articles />
+            <User {...props} />
         </Router>
     )
 

@@ -51,5 +51,11 @@ module.exports = {
                 following: [2],
                 followers: [3],
             })
+            .onPost('/api/blogs')
+            .reply(200, {
+                uuid: 4,
+            })
+            .onPut('/api/user')
+            .reply(200, {})
     },
 }

@@ -1,5 +1,11 @@
 import React from 'react'
-import { cleanup, waitFor, render, screen } from '@testing-library/react'
+import {
+    cleanup,
+    waitFor,
+    render,
+    screen,
+    fireEvent,
+} from '@testing-library/react'
 import Profile from '../../web/src/Profile'
 import { HashRouter as Router } from 'react-router-dom'
 
@@ -235,4 +241,66 @@ it('fetchArticleData-failure', async () => {
     await waitFor(() => screen.getAllByRole('heading'))
     await sleep(3000)
     expect(screen.queryByText(/Oops/g)).toBeTruthy()
+})
+
+it('updateProfile', async () => {
+    mock.reset()
+
+    render(
+        <Router>
+            <Profile history={{ push: () => {} }} />
+        </Router>
+    )
+    await waitFor(() => screen.getAllByRole('heading'))
+    await sleep(3000)
+
+    let input = screen.getByTestId('input-name')
+    expect(input).toBeTruthy()
+
+    fireEvent.change(input, { target: { value: 'Test Changed' } })
+    await waitFor(() => screen.queryAllByText(/Test Changed/))
+
+    input = screen.getByTestId('input-phone')
+    expect(input).toBeTruthy()
+
+    fireEvent.change(input, { target: { value: '+17735378605' } })
+    await waitFor(() => screen.queryAllByText(/7735378605/))
+
+    input = screen.getByTestId('input-phone')
+    expect(input).toBeTruthy()
+
+    const alertMock = jest.spyOn(window, 'alert')
+
+    fireEvent.change(input, { target: { value: '773537860' } })
+    await waitFor(() => screen.queryAllByText(/7735378605/))
+    expect(alertMock).toHaveBeenCalledTimes(1)
+})
+
+it('newArticile', async () => {
+    mock.reset()
+    jest.spyOn(window, 'alert')
+
+    const counter = { clicked: false }
+    const mockPush = jest.fn((route) => {
+        if (route == '/edit/4') {
+            counter.clicked = true
+        }
+    })
+
+    render(
+        <Router>
+            <Profile history={{ push: mockPush }} />
+        </Router>
+    )
+    await waitFor(() => screen.getAllByRole('heading'))
+    await sleep(3000)
+
+    fireEvent.click(screen.getByText('New'))
+    await waitFor(() => counter.clicked)
+
+    mock.reset()
+    mock.onPost('/api/blogs').reply(404)
+
+    fireEvent.click(screen.getByText('New'))
+    await waitFor(() => screen.queryByText(/Oops/g))
 })
