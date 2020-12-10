@@ -12,7 +12,7 @@ import { HashRouter as Router } from 'react-router-dom'
 const sleep = (m) => new Promise((r) => setTimeout(r, m))
 
 const config = require('../../config')
-const { mock } = require('./mock.server')
+const { mock, reset } = require('./mock.server')
 
 beforeAll(async (done) => {
     done()
@@ -95,13 +95,7 @@ it('fetchProfileData-failure', async () => {
             notificationPreference: 'asdf',
         })
         .onGet('/api/user')
-        .reply(404, {
-            uuid: 1,
-            email: 'user1@example.com',
-            name: 'Test User 1',
-            description: 'asdf',
-            notificationPreference: 'asdf',
-        })
+        .reply(404)
         .onGet('/api/blogs/1')
         .reply(200, {
             uuid: 1,
@@ -122,7 +116,7 @@ it('fetchProfileData-failure', async () => {
             following: [2],
             followers: [3],
         })
-    mock.reset()
+
     render(
         <Router>
             <Profile />
@@ -244,7 +238,7 @@ it('fetchArticleData-failure', async () => {
 })
 
 it('updateProfile', async () => {
-    mock.reset()
+    reset()
 
     render(
         <Router>
@@ -277,7 +271,7 @@ it('updateProfile', async () => {
 })
 
 it('newArticile', async () => {
-    mock.reset()
+    reset()
     jest.spyOn(window, 'alert')
 
     const counter = { clicked: false }

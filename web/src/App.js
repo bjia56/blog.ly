@@ -72,7 +72,7 @@ class App extends Component {
                         <Navbar.Collapse id="responsive-navbar-nav">
                             <Nav className="mr-auto">
                                 {/* These links are placeholders for now, will be modified once React Router is set up */}
-                                <Nav.Link href="#">Home</Nav.Link>
+                                <Nav.Link href="#home">Home</Nav.Link>
                                 <Nav.Link as={Link} to="/articles">
                                     Articles
                                 </Nav.Link>
