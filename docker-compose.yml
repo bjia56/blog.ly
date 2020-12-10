@@ -12,8 +12,10 @@ services:
         command: 'tail -f /dev/null'
         depends_on:
             - database
+            - elastic
         links:
             - database
+            - elastic
         environment:
             DB_HOST: database
             DB_PORT: 3306
@@ -36,5 +38,21 @@ services:
             MYSQL_DATABASE: blogly
             MYSQL_USER: blogly
             MYSQL_PASSWORD: blogly
+
+    elastic:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+        container_name: es
+        environment:
+            - bootstrap.memory_lock=true
+            - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+            - 'discovery.type=single-node'
+            - 'http.cors.enabled=true'
+            - 'http.cors.allow-origin=https://app.elasticvue.com'
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        ports:
+            - 9200:9200
 volumes:
     db_data: {}
