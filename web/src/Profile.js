@@ -160,7 +160,9 @@ class Profile extends Component {
                 name: this.state.name,
                 description: this.state.description,
                 notificationPreference: this.state.notificationPreference,
-                phone: this.state.phone,
+            }
+            if (this.state.phone.length > 1) {
+                body['phone'] = this.state.phone
             }
             axios
                 .put(`/api/user`, body)
@@ -295,17 +297,30 @@ class Profile extends Component {
                                         id="dropdown-notification"
                                         title={
                                             this.state.notificationPreference
+                                                .length == 0
+                                                ? 'instant'
+                                                : this.state
+                                                      .notificationPreference
                                         }
                                         variant="outline-info"
                                         onSelect={this.handleSelect.bind(this)}
                                     >
-                                        <Dropdown.Item eventKey="instant">
+                                        <Dropdown.Item
+                                            eventKey="instant"
+                                            active
+                                        >
                                             Instant
                                         </Dropdown.Item>
-                                        <Dropdown.Item eventKey="hourly">
+                                        <Dropdown.Item
+                                            eventKey="hourly"
+                                            disabled
+                                        >
                                             Hourly
                                         </Dropdown.Item>
-                                        <Dropdown.Item eventKey="daily">
+                                        <Dropdown.Item
+                                            eventKey="daily"
+                                            disabled
+                                        >
                                             Daily
                                         </Dropdown.Item>
                                     </DropdownButton>
