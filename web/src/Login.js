@@ -19,10 +19,6 @@ class Login extends Component {
         window.location.href = `${base_url}/login`
     }
 
-    componentWillReceiveProps({ isLogin }) {
-        this.setState({ isLoggedIn: isLogin })
-    }
-
     render() {
         return (
             <Container style={{ marginTop: 50 }} fluid="md">
@@ -43,6 +39,7 @@ class Login extends Component {
                             <Button
                                 variant="primary"
                                 onClick={this.onLogin.bind(this)}
+                                data-testid="login"
                             >
                                 Login
                             </Button>

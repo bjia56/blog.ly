@@ -161,7 +161,6 @@ class Profile extends Component {
                 notificationPreference: this.state.notificationPreference,
                 phone: this.state.phone,
             }
-            console.log(body)
             axios
                 .put(`/api/user`, body)
                 .then((resp) => {
@@ -239,8 +238,7 @@ class Profile extends Component {
                                 <Col>
                                     <EditableLabel
                                         text={this.state.name}
-                                        inputClassName="input-name"
-                                        labelClassName="input-name"
+                                        inputClass="input-name"
                                         inputMaxLength={50}
                                         onFocusOut={this.handleSave.bind(
                                             this,
@@ -262,8 +260,7 @@ class Profile extends Component {
                                 <Col>
                                     <EditableLabel
                                         text={this.state.description}
-                                        inputClassName="input-description"
-                                        labelClassName="input-description"
+                                        inputClass="input-description"
                                         inputMaxLength={50}
                                         onFocusOut={this.handleSave.bind(
                                             this,
@@ -279,8 +276,7 @@ class Profile extends Component {
                                 <Col>
                                     <EditableLabel
                                         text={this.state.phone}
-                                        inputClassName="input-phone"
-                                        labelClassName="input-phone"
+                                        inputClass="input-phone"
                                         inputMaxLength={50}
                                         onFocusOut={this.handleSave.bind(
                                             this,

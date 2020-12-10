@@ -3,7 +3,7 @@ import Container from 'react-bootstrap/Container'
 import Card from 'react-bootstrap/Card'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Button from 'react-bootstrap/Button'
-import { Link } from 'react-router-dom'
+import Alert from 'react-bootstrap/Alert'
 import axios from 'axios'
 
 class User extends Component {
@@ -26,6 +26,7 @@ class User extends Component {
     }
 
     fetchFollowingData() {
+        this.setState({ err: false })
         axios
             .get(`/api/follow`)
             .then((resp) => {
@@ -38,26 +39,33 @@ class User extends Component {
                 }
             })
             .catch((e) => {
-                console.log(e)
+                this.setState({ err: true })
             })
     }
 
     fetchProfileData() {
+        this.setState({ err: false })
         let { id } = this.props.match.params
-        axios.get(`/api/user?user=${id}`).then((resp) => {
-            const data = resp.data
-            delete data.notificationPreference
-            this.setState({ ...data })
-        })
+        axios
+            .get(`/api/user?user=${id}`)
+            .then((resp) => {
+                const data = resp.data
+                delete data.notificationPreference
+                this.setState({ ...data })
+            })
+            .catch(() => {
+                this.setState({ err: true })
+            })
     }
 
     fetchArticleData() {
         const limit = 100
         const { id } = this.props.match.params
+        this.setState({ err: false })
         axios
             .get(`/api/blogs?limit=${limit}&author=${id}`)
             .then((resp) => {
-                let uuids = resp.data.uuids || []
+                let uuids = resp.data.uuids
                 return Promise.all(
                     uuids.map((uuid) =>
                         axios
@@ -70,7 +78,7 @@ class User extends Component {
                 this.setState({ articles })
             })
             .catch((e) => {
-                console.log(e)
+                this.setState({ err: true })
             })
     }
 
