@@ -28,6 +28,7 @@ services:
             TWILIO_CLIENT_ID: ACada91a1ae88de654007413c58037070c
             TWILIO_CLIENT_SECRET: fb468e65cd013045ae21b100d9fb177b
             TWILIO_PHONE_NUMBER: '+19198137840'
+            ELASTIC_HOST: elastic
     database:
         image: mysql:5.7
         volumes:
