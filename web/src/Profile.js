@@ -37,32 +37,33 @@ class Profile extends Component {
 
     fetchFollowData() {
         this.setState({ err: false })
-        // TODO fix this
-        axios
-            .get(`/api/follow`)
-            .then((resp) =>
-                Promise.all([
-                    ...resp.data.following.map((uuid) =>
-                        axios
-                            .get(`/api/user?user=${uuid}`)
-                            .then((resp) => resp.data)
-                    ),
-                    ...resp.data.followers.map((uuid) =>
-                        axios
-                            .get(`/api/user?user=${uuid}`)
-                            .then((resp) => resp.data)
-                    ),
-                ])
+        axios.get(`/api/follow`).then((resp) => {
+            Promise.all(
+                resp.data.following.map((uuid) =>
+                    axios
+                        .get(`/api/user?user=${uuid}`)
+                        .then((resp) => resp.data)
+                )
             )
-            .then((users) => {
-                console.log(users)
-                users[0].then((following) => this.setState({ following }))
-                users[1].then((followers) => this.setState({ followers }))
-            })
-            .catch((e) => {
-                console.log(e)
-                this.setState({ err: true })
-            })
+                .then((following) => this.setState({ following }))
+                .catch((e) => {
+                    console.log(e)
+                    this.setState({ err: true })
+                })
+
+            Promise.all(
+                resp.data.followers.map((uuid) =>
+                    axios
+                        .get(`/api/user?user=${uuid}`)
+                        .then((resp) => resp.data)
+                )
+            )
+                .then((followers) => this.setState({ followers }))
+                .catch((e) => {
+                    console.log(e)
+                    this.setState({ err: true })
+                })
+        })
     }
 
     fetchProfileData() {
