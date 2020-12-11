@@ -51,8 +51,10 @@ jobs:
                   done
 
             - name: Verify Elasticsearch connection
+              env:
+                  PORT: ${{ job.services.elastic.ports[9200] }}
               run: |
-                  curl --verbose --show-error http://localhost:9200
+                  curl --verbose --show-error http://127.0.0.1:$PORT
 
             - name: Create database tables
               run: npm run createDB
