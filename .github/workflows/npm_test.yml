@@ -72,5 +72,7 @@ jobs:
                   TWILIO_CLIENT_ID: ACtest
                   TWILIO_CLIENT_SECRET: test
                   TWILIO_PHONE_NUMBER: '+11234567890'
+                  ELASTIC_HOST: 127.0.0.1
+                  ELASTIC_PORT: ${{ job.services.elastic.ports[9200] }}
               run: |
                   npm run test
