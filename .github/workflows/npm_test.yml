@@ -50,6 +50,10 @@ jobs:
                     sleep 1
                   done
 
+            - name: Verify Elasticsearch connection
+              run: |
+                  curl --verbose --show-error http://localhost:9200
+
             - name: Create database tables
               run: npm run createDB
 
