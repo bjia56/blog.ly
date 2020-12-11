@@ -416,12 +416,18 @@ components:
                 blog:
                     description: Blog uuid
                     type: integer
+                title:
+                    description: Blog title
+                    type: string
+                contents:
+                    description: Blog contents
+                    type: string
                 author:
                     description: Author uuid
                     type: integer
-                hits:
-                    description: Total hits
-                    type: integer
+                authorName:
+                    description: Author anem
+                    type: string
         UpdateBlog:
             type: object
             properties:

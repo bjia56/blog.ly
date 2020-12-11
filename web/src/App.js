@@ -17,6 +17,7 @@ import Articles from './Articles'
 import Edit from './Edit'
 import Login from './Login'
 import User from './User'
+import Search from './Search'
 import axios from 'axios'
 
 class App extends Component {
@@ -25,6 +26,7 @@ class App extends Component {
         this.state = {
             isLoggedIn: false,
             user: {},
+            searchText: '',
         }
     }
 
@@ -52,6 +54,16 @@ class App extends Component {
                     })
                 }
             })
+    }
+
+    onSearchChange(event) {
+        event.preventDefault()
+        this.setState({ searchText: event.target.value })
+    }
+
+    onSearch() {
+        window.location.href =
+            '/#/search/' + encodeURIComponent(this.state.searchText)
     }
 
     render() {
@@ -83,10 +95,17 @@ class App extends Component {
                             <Form inline>
                                 <FormControl
                                     type="text"
+                                    value={this.state.searchText}
+                                    onChange={this.onSearchChange.bind(this)}
                                     placeholder="Search"
                                     className="mr-sm-2"
                                 />
-                                <Button variant="outline-info">Search</Button>
+                                <Button
+                                    variant="outline-info"
+                                    onClick={this.onSearch.bind(this)}
+                                >
+                                    Search
+                                </Button>
                             </Form>
                         </Navbar.Collapse>
                     </Navbar>
@@ -104,6 +123,10 @@ class App extends Component {
                                     <Redirect to="/loginPage" />
                                 )
                             }}
+                        ></Route>
+                        <Route
+                            path="/search/:keyword"
+                            component={Search}
                         ></Route>
                         <Route
                             path="/articles"

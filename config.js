@@ -14,6 +14,7 @@ const config = {
     TWILIO_CLIENT_ID: process.env.TWILIO_CLIENT_ID,
     TWILIO_CLIENT_SECRET: process.env.TWILIO_CLIENT_SECRET,
     TWILIO_PHONE_NUMBER: process.env.TWILIO_PHONE_NUMBER,
+    ELASTIC_API: 'http://elastic:9200',
 }
 config.OPENAPI_YAML = path.join(config.ROOT_DIR, 'api', 'openapi.yaml')
 config.FULL_PATH = `${config.URL_PATH}:${config.URL_PORT}/${config.BASE_VERSION}`

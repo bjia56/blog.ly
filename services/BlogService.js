@@ -2,6 +2,7 @@ var MarkdownIt = require('markdown-it')()
 
 const Service = require('./Service')
 const Database = require('../sql')
+const { Client: ESClient } = require('../elastic')
 const { sendNotifications } = require('../util/twilio')
 
 const Blog = Database.Blog
@@ -196,19 +197,44 @@ const apiBlogsUuidPUT = ({ uuid, body }, loggedInUser) =>
                 blog.content = body.contents
             }
 
+            const author = await User.findAll({
+                where: { uuid: blog.author },
+                limit: 1,
+            })
+            console.log('Author Results:' + JSON.stringify(author))
+
             if (body.title != null && body.contents != null) {
-                var author = await User.findAll({
-                    where: { uuid: blog.author },
-                    limit: 1,
-                })
-                console.log('Author Results:' + JSON.stringify(author))
                 sendNotifications(author[0])
             }
 
             await blog.save()
 
+            console.log('ES update', {
+                uuid: blog.uuid,
+                author: blog.author,
+                authorName: author[0].name,
+                title: blog.title,
+                contents: blog.content,
+            })
+
+            await ESClient.update({
+                index: 'blogs',
+                id: blog.uuid,
+                body: {
+                    doc: {
+                        uuid: blog.uuid,
+                        author: blog.author,
+                        authorName: author[0].name,
+                        title: blog.title,
+                        contents: blog.content,
+                    },
+                    doc_as_upsert: true,
+                },
+            })
+
             resolve(Service.successResponse())
         } catch (e) {
+            console.log(e)
             reject(Service.rejectResponse(e))
         }
     })
