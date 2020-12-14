@@ -19,6 +19,17 @@ jobs:
                 options:
                     --health-cmd="mysqladmin ping" --health-interval=5s
                     --health-timeout=2s --health-retries=3
+ 
+            elastic:
+                image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+                ports:
+                    - 9200
+                env:
+                    bootstrap.memory_lock: true
+                    ES_JAVA_OPTS: -Xms256m -Xmx256m
+                    discovery.type: single-node
+                    http.cors.enabled: true
+                    http.cors.allow-origin: https://app.elasticvue.com
 
         steps:
             - uses: actions/checkout@v2
@@ -39,6 +50,12 @@ jobs:
                     sleep 1
                   done
 
+            - name: Verify Elasticsearch connection
+              env:
+                  PORT: ${{ job.services.elastic.ports[9200] }}
+              run: |
+                  curl --verbose --show-error http://127.0.0.1:$PORT
+
             - name: Create database tables
               run: npm run createDB
 
@@ -55,5 +72,7 @@ jobs:
                   TWILIO_CLIENT_ID: ACtest
                   TWILIO_CLIENT_SECRET: test
                   TWILIO_PHONE_NUMBER: '+11234567890'
+                  ELASTIC_HOST: 127.0.0.1
+                  ELASTIC_PORT: ${{ job.services.elastic.ports[9200] }}
               run: |
                   npm run test
