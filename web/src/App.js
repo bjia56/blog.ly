@@ -101,6 +101,7 @@ class App extends Component {
                                     className="mr-sm-2"
                                 />
                                 <Button
+                                    type="submit"
                                     variant="outline-info"
                                     onClick={this.onSearch.bind(this)}
                                 >

@@ -62,7 +62,7 @@ class Search extends Component {
                     {this.state.hits.map((hit) => (
                         <ListGroup.Item
                             as="div"
-                            key={hit.uuid}
+                            key={hit.blog}
                             style={{ border: 0 }}
                         >
                             <Card border="primary" style={{ width: '100%' }}>

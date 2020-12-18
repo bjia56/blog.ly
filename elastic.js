@@ -18,7 +18,7 @@ module.exports = {
                         uuid: { type: 'integer' },
                         author: { type: 'integer' },
                         authorName: { type: 'keyword' },
-                        title: { type: 'text' },
+                        title: { type: 'text', analyzer: 'my_analyzer' },
                         contents: { type: 'text', analyzer: 'my_analyzer' },
                     },
                 },

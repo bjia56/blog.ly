@@ -36,7 +36,7 @@ const apiSearchGET = ({ keyword, cursor, limit }) =>
                             contents: {},
                         },
                         encoder: 'html',
-                        pre_tags: ['<mark>'],
+                        pre_tags: ['<mark class="bg-warning">'],
                         post_tags: ['</mark>'],
                         number_of_fragments: 0,
                     },
